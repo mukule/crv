@@ -1,0 +1,72 @@
+.nav-link {
+  background-color: #fff; /* set the background color for nav links */
+  padding: 0.5rem 1rem; /* set the padding for nav links */
+  border-radius: 0.5rem; /* set the border radius for nav links */
+  line-height: 3em;
+  transition: all 0.3s ease-in-out; /* set the transition effect for hover */
+  text-transform: uppercase;
+	font-weight: bold; 
+  box-shadow: inset -60px 8px 120px -50px rgb(212 212 212);
+  color: #5C0E7B!important;
+	text-align: center;
+	padding: 8px 20px;
+}
+
+.nav-link:hover {
+  background-color: coral; /* set the background color for nav links on hover */
+  color: #fff; /* set the text color for nav links on hover */
+  text-decoration: none; /* remove the underline on hover */
+}
+.topnav {
+  background-color: #F5F5F5!important;
+  overflow: hidden;
+}
+
+.topnav a:hover {
+  background-color: #FF671F;
+  color: #fff!important;
+  text-decoration:none;
+
+}
+
+.carousel-item {
+  height: 300px;
+}
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 8 8'%3e%3cpath d='M5.5 0l-3 3h7z'/%3e%3c/svg%3e");
+}
+
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 8 8'%3e%3cpath d='M2.5 0h3l3 3H2.5z'/%3e%3c/svg%3e");
+}
+footer {
+  background-color: coral;
+  color: #fff;
+  padding: 30px 0;
+}
+
+footer h4 {
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+footer p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.social-media-icons li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.social-media-icons li a {
+  color: #fff;
+  font-size: 24px;
+  transition: color 0.2s;
+}
+
+.social-media-icons li a:hover {
+  color: #f5f5f5;
+}
