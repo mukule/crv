@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content">
+    <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style" style="min-height:65vh;">
+        <legend class="border-bottom mb-4">Edit Profile Information:</legend>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if user.username == form.instance.username %}
+                <fieldset class="form-group">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                            {{ form.first_name|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-6 mb-0">
+                            {{ form.last_name|as_crispy_field }}
+                        </div>
+                    </div> 
+                    {{ form.email|as_crispy_field }}
+                    <a href="{% url 'password_change' %}">Change password?</a>
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Update</button>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock content %}

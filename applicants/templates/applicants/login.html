@@ -1,0 +1,41 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div style="display: flex; align-items: center; justify-content: center; height: 100vh;">
+                <div class="card" style="max-width: 400px; width: 100%;">
+                    <div class="card-body card-block text-center">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <fieldset class="form-group mb-0">
+                                <legend class="border-bottom mb-4">Sign in</legend>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-lg text-center" id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" placeholder="Enter your ID Number" required autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control form-control-lg text-center" id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" placeholder="Enter your password" required autocomplete="off">
+                                </div>
+                            </fieldset>
+                            <button class="btn btn-success mb-4 custom-button" type="submit" style="background-color: #89c73e; color: #ffffff; border:0; border-radius: 20px; height: 50px; width: 50%;">Login</button>
+                        </form>
+                        <div class="border-top">
+                            <small class="text-muted">
+                                Need an Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
+                            </small><br>
+                            <small class="text-muted">
+                                <a href="{% url 'password_reset' %}">Forgot password?</a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+{% endblock content %}

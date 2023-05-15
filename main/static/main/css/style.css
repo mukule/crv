@@ -2610,5 +2610,22 @@ margin: 10px 0;
 margin-top: 60px;
 }
 
-    
-/*# sourceMappingURL=style.css.map */
+
+.form-control-lg {
+  height: 50px; /* Adjust the height as needed */
+  font-size: 1rem; /* Adjust the font size as needed */
+  border: 0.5px solid #203c8f; /* Border color */
+  border-radius: 20px; /* Border radius */
+  padding: 10px 15px;
+}
+
+
+ /* Disable autofill styles */
+ input:-webkit-autofill,
+ input:-webkit-autofill:hover,
+ input:-webkit-autofill:focus,
+ input:-webkit-autofill:active {
+     -webkit-box-shadow: 0 0 0 30px white inset !important;
+     /* Change the color to match your background color */
+     -webkit-text-fill-color: #89c73e !important
+ }

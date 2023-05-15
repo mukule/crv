@@ -8,7 +8,7 @@
 
     <!-- Link to page favicon.ico to display in location Bar-->
     <link rel="icon" href="{% static 'main/images/icon.png' %}">
-    <title>Kenyaweb Solutions Intranet</title>
+    <title>CENTRAL RIFT VALLEY WATER WORKS DEVELOPMENT AGENCY CAREER PORTAL</title>
 
     <!-- Bootstrap CSS -->
    
@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
     <link rel="stylesheet" href="{% static 'main/css/cs-skin-elastic.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'main/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/home.css' %}" type="text/css">
     
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
     <link href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css" rel="stylesheet">
@@ -39,7 +40,6 @@
 <body>
     <div id="right-panel" class="right-panel">
     {% include 'main/includes/navbar.html' %}
- 
                 {% include '../main/includes/messaging.html' %}
                 {% block content %}
                 {% endblock %}

@@ -1,6 +1,19 @@
 from django.db import models
+from django.template.defaultfilters import slugify
+import os
+from django.contrib.auth.models import AbstractUser
 
-class JobApplication(models.Model):
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    def image_upload_to(self, instance=None):
+        if instance:
+            return os.path.join('Users', self.username, instance)
+        return None
+
+    ...
+    image = models.ImageField(default='default/user.jpg', upload_to=image_upload_to)
+
+class Vacancy(models.Model):
     job_name = models.CharField(max_length=100)
     job_ref = models.CharField(max_length=20)
     job_description = models.TextField()
