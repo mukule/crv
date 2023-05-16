@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, login, authenticate
 from .forms import UserRegisterForm
 from django.contrib import messages
@@ -14,9 +14,13 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from .token import account_activation_token
 from django.core.mail import EmailMessage
-from .forms import SetPasswordForm
-from .forms import PasswordResetForm
+from .forms import SetPasswordForm,PasswordResetForm, AcademicDetailsForm
 from django.db.models.query_utils import Q
+from .models import AcademicDetails
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 
 # Create your views here.
@@ -200,6 +204,7 @@ def custom_logout(request):
     messages.info(request, "succesfully logged out")
     return redirect("index")
 
+
 def profile(request, username):
     if request.method == 'POST':
         user = request.user
@@ -207,7 +212,8 @@ def profile(request, username):
         if form.is_valid():
             user_form = form.save()
 
-            messages.success(request, f'{user_form}, Your profile has been updated!')
+            success_message = f'{user_form.first_name} {user_form.last_name}, your Personnal information has been updated!'
+            messages.success(request, success_message)
             return redirect('profile', user_form.username)
 
         for error in list(form.errors.values()):
@@ -219,3 +225,19 @@ def profile(request, username):
         return render(request, 'applicants/profile.html', context={'form': form})
 
     return redirect("index")
+
+
+def update_academic_details(request):
+    user = request.user
+    academic_details, created = AcademicDetails.objects.get_or_create(user=user)
+
+    if request.method == 'POST':
+        form = AcademicDetailsForm(request.POST, instance=academic_details)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Redirect to the profile page
+
+    else:
+        form = AcademicDetailsForm(instance=academic_details)
+
+    return render(request, 'applicants/academic_details.html', {'form': form})

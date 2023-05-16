@@ -18,10 +18,10 @@
                 
                 <li class="menu-title">My Profile</li><!-- /.menu-title -->
                 <li class="menu-item">
-                    <a href=""><i class="menu-icon fa fa-user-md"></i>Personnal Details</a>
+                    <a href="{% url 'profile' user.username %}"><i class="menu-icon fa fa-user-md"></i>Personnal Details</a>
                 </li>
                 <li class="menu-item">
-                    <a href=""><i class="menu-icon fa fa-book"></i>Academic Qualifications</a>
+                    <a href="{% url 'academic_details'%}"><i class="menu-icon fa fa-book"></i>Academic Qualifications</a>
                 </li>
                 <li class="menu-item">
                     <a href=""><i class="menu-icon fa fa-sitemap"></i>Professional Qualifications</a>
