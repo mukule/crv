@@ -6,7 +6,7 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms.widgets import DateInput
 from django.forms import ModelForm, DateInput
-from .models import AcademicLevel, AreaOfStudy, Specialization, ExaminingBody, AcademicDetails
+from .models import AcademicDetails, RelevantCourse
 
 
 
@@ -111,3 +111,8 @@ class AcademicDetailsForm(ModelForm):
         model = AcademicDetails
         fields = ['academic_level', 'area_of_study', 'specialization', 'examining_body',
                   'institution_name', 'admission_number', 'start_year', 'end_year', 'graduation_year']
+        
+class RelevantCourseForm(forms.ModelForm):
+    class Meta:
+        model = RelevantCourse
+        fields = ['course_name', 'provider', 'completion_date']

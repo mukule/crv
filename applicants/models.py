@@ -72,21 +72,28 @@ class Course(models.Model):
         return self.name
     
 class AcademicDetails(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
     area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
     specialization = models.ForeignKey(Specialization, on_delete=models.SET_NULL, null=True, blank=True)
     examining_body = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
-    institution_name = models.CharField(max_length=100)
-    admission_number = models.CharField(max_length=20)
-    start_year = models.PositiveIntegerField(blank=True, null=True, default=20)
-    end_year = models.PositiveIntegerField(blank=True, null=True, )
-    graduation_year = models.PositiveIntegerField(blank=True)
+    institution_name = models.CharField(max_length=100, null=True, blank=True)
+    admission_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    start_year = models.DateField(blank=True, null=True)
+    end_year = models.DateField(blank=True, null=True)
+    graduation_year = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return self.user.username
+    
+class RelevantCourse(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    course_name = models.CharField(max_length=100)
+    provider = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
+    completion_date = models.DateField()
 
-
+    def __str__(self):
+        return self.course_name
 
 
 

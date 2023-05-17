@@ -14,7 +14,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from .token import account_activation_token
 from django.core.mail import EmailMessage
-from .forms import SetPasswordForm,PasswordResetForm, AcademicDetailsForm
+from .forms import SetPasswordForm,PasswordResetForm, AcademicDetailsForm, RelevantCourseForm
 from django.db.models.query_utils import Q
 from .models import AcademicDetails
 from django.contrib.auth import get_user_model
@@ -227,17 +227,61 @@ def profile(request, username):
     return redirect("index")
 
 
-def update_academic_details(request):
+
+@login_required
+def create_academic_details(request):
     user = request.user
-    academic_details, created = AcademicDetails.objects.get_or_create(user=user)
+
+    try:
+        academic_details = AcademicDetails.objects.get(user=user)
+    except AcademicDetails.DoesNotExist:
+        academic_details = None
+
+    if request.method == 'POST':
+        form = AcademicDetailsForm(request.POST)
+        if form.is_valid():
+            academic_detail = form.save(commit=False)
+            academic_detail.user = user
+            academic_detail.save()
+            messages.success(request, 'Academic details created successfully.')
+            return redirect('academic_details')
+
+    else:
+        form = AcademicDetailsForm()
+
+    context = {
+        'form': form,
+        'academic_details': academic_details
+    }
+
+    return render(request, 'applicants/academic_details.html', context)
+
+
+def update_academic_details(request, academic_details_id):
+    academic_details = get_object_or_404(AcademicDetails, id=academic_details_id, user=request.user)
 
     if request.method == 'POST':
         form = AcademicDetailsForm(request.POST, instance=academic_details)
         if form.is_valid():
             form.save()
-            return redirect('profile')  # Redirect to the profile page
+            messages.success(request, 'Academic details updated successfully.')
+            return redirect('academic_details')  # Redirect to the academic details page
 
     else:
         form = AcademicDetailsForm(instance=academic_details)
 
-    return render(request, 'applicants/academic_details.html', {'form': form})
+    return render(request, 'applicants/academic_details_update.html', {'form': form})
+
+def create_relevant_course(request):
+    if request.method == 'POST':
+        form = RelevantCourseForm(request.POST)
+        if form.is_valid():
+            relevant_course = form.save(commit=False)
+            relevant_course.user = request.user
+            relevant_course.save()
+            # Add any success message or redirection logic here
+            return redirect('success_url')
+    else:
+        form = RelevantCourseForm()
+    
+    return render(request, 'applicants/relevant_course.html', {'form': form})

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Vacancy, CustomUser, AcademicLevel, AreaOfStudy, Specialization, ExaminingBody, Course
+from django.contrib.auth.admin import UserAdmin
+from .models import Vacancy, CustomUser, AcademicLevel, AreaOfStudy, Specialization, ExaminingBody, Course, AcademicDetails
 
 @admin.register(AcademicLevel)
 class AcademicLevelAdmin(admin.ModelAdmin):
@@ -22,13 +23,14 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = ('name', 'examining_body')
 
 
-class VacancyAdmin(admin.ModelAdmin):
-    list_display = ('job_name', 'job_ref', 'date_open', 'date_closed')
-    list_filter = ('date_open', 'date_closed')
-    search_fields = ('job_name', 'job_ref')
-    date_hierarchy = 'date_open'
-
-admin.site.register(Vacancy, VacancyAdmin)
-admin.site.register(CustomUser)
+class AcademicDetailsInline(admin.TabularInline):
+    model = AcademicDetails
+    extra = 0
 
 
+class CustomUserAdmin(UserAdmin):
+    inlines = (AcademicDetailsInline,)
+
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Vacancy)
+admin.site.register(AcademicDetails)
