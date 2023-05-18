@@ -84,17 +84,81 @@ class AcademicDetails(models.Model):
     graduation_year = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.first_name} {self.user.last_name}"
     
 class RelevantCourse(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     course_name = models.CharField(max_length=100)
-    provider = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
-    completion_date = models.DateField()
+    institution = models.CharField(max_length=100, null=True, blank=True)
+    certification = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    completion_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return self.course_name
+        return f"{self.user.first_name} {self.user.last_name}"
+    
+class EmploymentHistory(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    company_name = models.CharField(max_length=100)
+    position = models.CharField(max_length=100)
+    position_description = models.TextField(blank=True, null=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.company_name} - {self.position}"
+    
+class Referee(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    occupation = models.CharField(max_length=100)
+    organization = models.CharField(max_length=100)
+    relationship_period = models.CharField(max_length=100)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+    
+class Resume(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
+    area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
+    specialization = models.ForeignKey(Specialization, on_delete=models.SET_NULL, null=True, blank=True)
+    examining_body = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True, related_name='resume_examining_body')
+    institution_name = models.CharField(max_length=100, null=True, blank=True)
+    admission_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    start_year = models.DateField(blank=True, null=True)
+    end_year = models.DateField(blank=True, null=True)
+    graduation_year = models.DateField(blank=True, null=True)
+    academic_details = models.ManyToManyField(AcademicDetails, blank=True)
+    
+    # Fields from RelevantCourse model
+    course_name = models.CharField(max_length=100)
+    institution = models.CharField(max_length=100, null=True, blank=True)
+    certification = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True, related_name='resume_certification')
+    start_date = models.DateField(null=True, blank=True)
+    completion_date = models.DateField(blank=True, null=True)
+    relevant_courses = models.ManyToManyField(RelevantCourse, blank=True)
+    # Fields from EmploymentHistory model
+    company_name = models.CharField(max_length=100)
+    position = models.CharField(max_length=100)
+    position_description = models.TextField(blank=True, null=True)
+    employment_start_date = models.DateField(blank=True, null=True)
+    employment_end_date = models.DateField(blank=True, null=True)
+    employment_histories = models.ManyToManyField(EmploymentHistory, blank=True)
+    
+    # Fields from Referee model
+    referee_name = models.CharField(max_length=100)
+    occupation = models.CharField(max_length=100)
+    organization = models.CharField(max_length=100)
+    relationship_period = models.CharField(max_length=100)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    referees = models.ManyToManyField(Referee, blank=True)
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name} - Resume"
 
 
 

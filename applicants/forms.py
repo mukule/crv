@@ -6,7 +6,7 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms.widgets import DateInput
 from django.forms import ModelForm, DateInput
-from .models import AcademicDetails, RelevantCourse
+from .models import *
 
 
 
@@ -113,6 +113,21 @@ class AcademicDetailsForm(ModelForm):
                   'institution_name', 'admission_number', 'start_year', 'end_year', 'graduation_year']
         
 class RelevantCourseForm(forms.ModelForm):
+    start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    completion_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
     class Meta:
         model = RelevantCourse
-        fields = ['course_name', 'provider', 'completion_date']
+        fields = ['course_name', 'institution', 'certification', 'start_date', 'completion_date']
+
+class EmploymentHistoryForm(forms.ModelForm):
+    start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    end_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    class Meta:
+        model = EmploymentHistory
+        fields = ['company_name', 'position', 'position_description', 'start_date', 'end_date']
+
+class RefereeForm(forms.ModelForm):
+    class Meta:
+        model = Referee
+        fields = ['name', 'organization', 'occupation', 'relationship_period', 'email', 'phone']
+       

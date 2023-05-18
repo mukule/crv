@@ -14,9 +14,9 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from .token import account_activation_token
 from django.core.mail import EmailMessage
-from .forms import SetPasswordForm,PasswordResetForm, AcademicDetailsForm, RelevantCourseForm
+from .forms import *
 from django.db.models.query_utils import Q
-from .models import AcademicDetails
+from .models import *
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -232,10 +232,7 @@ def profile(request, username):
 def create_academic_details(request):
     user = request.user
 
-    try:
-        academic_details = AcademicDetails.objects.get(user=user)
-    except AcademicDetails.DoesNotExist:
-        academic_details = None
+    academic_details = AcademicDetails.objects.filter(user=user)
 
     if request.method == 'POST':
         form = AcademicDetailsForm(request.POST)
@@ -257,6 +254,7 @@ def create_academic_details(request):
     return render(request, 'applicants/academic_details.html', context)
 
 
+
 def update_academic_details(request, academic_details_id):
     academic_details = get_object_or_404(AcademicDetails, id=academic_details_id, user=request.user)
 
@@ -273,15 +271,145 @@ def update_academic_details(request, academic_details_id):
     return render(request, 'applicants/academic_details_update.html', {'form': form})
 
 def create_relevant_course(request):
+    user = request.user
+
     if request.method == 'POST':
         form = RelevantCourseForm(request.POST)
         if form.is_valid():
             relevant_course = form.save(commit=False)
-            relevant_course.user = request.user
+            relevant_course.user = user
             relevant_course.save()
-            # Add any success message or redirection logic here
-            return redirect('success_url')
+            messages.success(request, 'Relevant course added successfully.')
+            return redirect('relevant_courses')
     else:
         form = RelevantCourseForm()
+
+    relevant_courses = RelevantCourse.objects.filter(user=user)
+
+    context = {
+        'form': form,
+        'relevant_courses': relevant_courses
+    }
+
+    return render(request, 'applicants/relevant_course.html', context)
+
+def update_relevant_course(request, relevant_course_id):
+    user = request.user
+    try:
+        relevant_course = RelevantCourse.objects.get(id=relevant_course_id, user=user)
+    except RelevantCourse.DoesNotExist:
+        messages.error(request, 'Relevant course not found.')
+        return redirect('relevant_courses')
+
+    if request.method == 'POST':
+        form = RelevantCourseForm(request.POST, instance=relevant_course)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Relevant course updated successfully.')
+            return redirect('relevant_courses')
+    else:
+        form = RelevantCourseForm(instance=relevant_course)
+
+    context = {
+        'form': form,
+        'relevant_course': relevant_course
+    }
+
+    return render(request, 'applicants/update_relevant_course.html', context)
+
+def create_employment_history(request):
+    user = request.user
+
+    if request.method == 'POST':
+        form = EmploymentHistoryForm(request.POST)
+        if form.is_valid():
+            employment_history = form.save(commit=False)
+            employment_history.user = user
+            employment_history.save()
+            messages.success(request, 'Employment History added successfully.')
+            return redirect('employment_history')
+    else:
+        form = EmploymentHistoryForm()
+
+    employment_histories = EmploymentHistory.objects.filter(user=user)
+
+    context = {
+        'form': form,
+        'employment_histories': employment_histories
+    }
+
+    return render(request, 'applicants/employment_history.html', context)
+
+def update_employment_history(request, employment_history_id):
+    employment_history = get_object_or_404(EmploymentHistory, id=employment_history_id)
+
+    if request.method == 'POST':
+        form = EmploymentHistoryForm(request.POST, instance=employment_history)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Employment History updated successfully.')
+            return redirect('employment_history')
+    else:
+        form = EmploymentHistoryForm(instance=employment_history)
+
+    context = {
+        'form': form,
+        'employment_history': employment_history
+    }
+
+    return render(request, 'applicants/update_employment_history.html', context)
+
+def create_referee(request):
+    user = request.user
+
+    if request.method == 'POST':
+        form = RefereeForm(request.POST)
+        if form.is_valid():
+            referee = form.save(commit=False)
+            referee.user = user
+            referee.save()
+            messages.success(request, 'Referee added successfully.')
+            return redirect('referee')
+    else:
+        form = RefereeForm()
+
+    referees = Referee.objects.filter(user=user)  # Retrieve referee objects for the current user
+
+    context = {
+        'form': form,
+        'referee': referees
+    }
+
+    return render(request, 'applicants/referee.html', context)
+
+def save_resume(request):
+    # Retrieve relevant data from other models
+    academic_details = AcademicDetails.objects.filter(user=request.user)
+    relevant_courses = RelevantCourse.objects.filter(user=request.user)
+    employment_histories = EmploymentHistory.objects.filter(user=request.user)
+    referees = Referee.objects.filter(user=request.user)
+
+    # Check if a Resume instance already exists for the user
+    resume, created = Resume.objects.get_or_create(user=request.user)
+
+    # Populate the resume with data from other models
+    if academic_details:
+        for academic_detail in academic_details:
+            resume.academic_details.add(academic_detail)
     
-    return render(request, 'applicants/relevant_course.html', {'form': form})
+    if relevant_courses:
+        for relevant_course in relevant_courses:
+            resume.relevant_courses.add(relevant_course)
+    
+    if employment_histories:
+        for employment_history in employment_histories:
+            resume.employment_histories.add(employment_history)
+    
+    if referees:
+        for referee in referees:
+            resume.referees.add(referee)
+
+    # Save the resume instance
+    resume.save()
+    messages.success(request, 'Your Resume Submitted successfully.')
+    return redirect('index')

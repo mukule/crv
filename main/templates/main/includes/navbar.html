@@ -15,7 +15,7 @@
                 <li class="menu-item">
                     <a href=""><i class="menu-icon fa fa-bookmark-o"></i>Internships</a>
                 </li>
-                
+                {% if user.is_authenticated %}
                 <li class="menu-title">My Profile</li><!-- /.menu-title -->
                 <li class="menu-item">
                     <a href="{% url 'profile' user.username %}"><i class="menu-icon fa fa-user-md"></i>Personnal Details</a>
@@ -27,10 +27,13 @@
                     <a href="{% url 'relevant_courses'%}"><i class="menu-icon fa fa-sitemap"></i>Other Relevant courses</a>
                 </li>
                 <li class="menu-item">
-                    <a href=""><i class="menu-icon fa fa-tasks"></i>Employment History</a>
+                    <a href="{% url 'employment_history'%}"><i class="menu-icon fa fa-tasks"></i>Employment History</a>
                 </li>
                 <li class="menu-item">
-                    <a href=""><i class="menu-icon fa fa-users"></i>Referees</a>
+                    <a href="{% url 'referee'%}"><i class="menu-icon fa fa-users"></i>Referees</a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'save_resume'%}"><i class="menu-icon fa fa-envelope"></i>Submit Resume</a>
                 </li>
 
                 <li class="menu-title">APPLY</li><!-- /.menu-title -->
@@ -41,6 +44,11 @@
                 <li class="menu-item mb-5">
                     <a href=""><i class="menu-icon fa fa-bookmark"></i>Intership</a>
                 </li>
+                {% else %}
+                <li class="menu-item">
+                    <a href="{% url 'login' %}"><i class="menu-icon fa fa-bullhorn"></i>Login</a>
+                </li>
+                {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->
     </nav>

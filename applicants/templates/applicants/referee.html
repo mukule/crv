@@ -1,0 +1,78 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content">
+    <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style" style="min-height:65vh;">
+        <legend class="border-bottom mb-4">Referees</legend>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                <fieldset class="form-group">
+                    <div class="form-row">
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.name|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.occupation|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.organization|as_crispy_field }}
+                        </div>
+                    </div> 
+                    <div class="form-row">
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.relationship_period|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.phone|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.email|as_crispy_field }}
+                        </div>
+                    </div> 
+                </fieldset>
+                <div class="form-row text-center">
+                    <div class="form-group col-md-12 mb-0">
+                        <button class="btn btn-success" type="submit">Add Referee</button>
+                    </div>
+                </div>
+                
+        </form>
+    </div>
+    <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Occupation</th>
+                    <th>Organization</th>
+                    <th>relationship Period</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for referee in referee %}
+                <tr>
+                    <td>{{ referee.name }}</td>
+                    <td>{{ referee.occupation }}</td>
+                    <td>{{ referee.organization }}</td>
+                    <td>{{ referee.relationship_period }}</td>
+                    <td>{{ referee.email }}</td>
+                    <td>{{ referee.phone }}</td>
+                    <td><a href="">Update</a></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">No referee details found.</td>
+                </tr>
+            {% endfor %}
+            
+
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+{% endblock content %}

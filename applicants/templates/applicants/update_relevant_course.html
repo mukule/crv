@@ -4,7 +4,7 @@
 {% block content %}
 <div class="content">
     <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style">
-        <legend class="border-bottom mb-4">Other relevant Courses</legend>
+        <legend class="border-bottom mb-4">Relevant Course</legend>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
                 <fieldset class="form-group">
@@ -31,40 +31,11 @@
                 </fieldset>
                 <div class="form-row text-center">
                     <div class="form-group col-md-12 mb-2">
-                        <button class="btn btn-success" type="submit">Add Relevant Course</button>
+                        <button class="btn btn-success" type="submit">Update Relevant Course</button>
                     </div>
                 </div>
                 
         </form>
     </div>
-    <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Course Name</th>
-                    <th>Institution</th>
-                    <th>Start Date</th>
-                    <th>Completion Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for relevant_course in relevant_courses %}
-                    <tr>
-                        <td>{{ relevant_course.course_name }}</td>
-                        <td>{{ relevant_course.institution }}</td>
-                        <td>{{ relevant_course.start_date }}</td>
-                        <td>{{ relevant_course.completion_date }}</td>
-                        <td><a class="btn btn-success" href="{% url 'update_relevant_course' relevant_course.id %}">Update</a></td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="4">No relevant courses found.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    
 </div>
 {% endblock content %}

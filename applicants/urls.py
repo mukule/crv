@@ -15,5 +15,10 @@ urlpatterns = [
     path('academic_details', views.create_academic_details, name='academic_details'),
     path('academic_details/update/<int:academic_details_id>', views.update_academic_details, name='update_academic_details'),
     path('relevant_courses/', views.create_relevant_course, name='relevant_courses'),
+    path('relevant_course/update/<int:relevant_course_id>/', views.update_relevant_course, name='update_relevant_course'),
+    path('employment_history', views.create_employment_history, name='employment_history'),
+    path('employment_history/update/<int:employment_history_id>/', views.update_employment_history, name='update_employment_history'),
+    path('referee/', views.create_referee, name='referee'),
+    path('save-resume/', views.save_resume, name='save_resume'),
 
 ]
