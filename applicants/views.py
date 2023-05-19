@@ -413,3 +413,4 @@ def save_resume(request):
     resume.save()
     messages.success(request, 'Your Resume Submitted successfully.')
     return redirect('index')
+

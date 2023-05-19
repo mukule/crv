@@ -1,8 +1,45 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+
 {% block content %}
-<div class="content">
- home/landing page
-</div>
+  <div class="content">
+    <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style">
+        <table class="table table-striped">
+            {% if vacancies %}
+           
+                <thead>
+                    <tr>
+                        <th>Job Ref</th>
+                        <th>Department</th>
+                        <th>Position</th>
+                        <th>Number of Vacancies</th>
+                        <th>Date Open</th>
+                        <th>Close Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vacancy in vacancies %}
+                        <tr>
+                            <td>{{ vacancy.job_ref }}</a>
+                            <td>{{ vacancy.department }}</td>
+                            <td>{{ vacancy.job_name }}</td>
+                            <td>{{ vacancy.number_of_vacancies }}</td>
+                            <td>{{ vacancy.date_open }}</td>
+                            <td>{{ vacancy.date_closed }}</td>
+                            <td><a class="btn btn-success" href="{% url 'job_detail' vacancy.id %}">Job details</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                
+           
+        {% else %}
+            <p>No vacancies available.</p>
+        {% endif %}
+        </table>
+    </div>
+   
+
+  </div>
 {% endblock content %}

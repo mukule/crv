@@ -4,13 +4,13 @@
         <div id="main-menu" class="main-menu collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="menu-item btn-success mt-2 mb-2" id="dashboard">
-                    <a href="" class="text-white d-flex align-items-center">
+                    <a href="{% url 'index'%}" class="text-white d-flex align-items-center">
                         <i class="menu-icon fa fa-home"></i>
                         Dashboard
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href=""><i class="menu-icon fa fa-bullhorn"></i>Advertised Jobs</a>
+                    <a href="{% url 'index'%}"><i class="menu-icon fa fa-bullhorn"></i>Advertised Jobs</a>
                 </li>
                 <li class="menu-item">
                     <a href=""><i class="menu-icon fa fa-bookmark-o"></i>Internships</a>
@@ -39,7 +39,7 @@
                 <li class="menu-title">APPLY</li><!-- /.menu-title -->
 
                 <li class="menu-item">
-                    <a href=""><i class="menu-icon fa fa-bullhorn"></i>Job</a>
+                    <a href="{% url 'index'%}"><i class="menu-icon fa fa-bullhorn"></i>Job</a>
                 </li>
                 <li class="menu-item mb-5">
                     <a href=""><i class="menu-icon fa fa-bookmark"></i>Intership</a>
