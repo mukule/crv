@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import *
+from django.urls import reverse
+from django.utils.html import format_html
+
 
 
 @admin.register(AcademicLevel)
@@ -105,7 +108,37 @@ class ResumeAdmin(admin.ModelAdmin):
     )
 
 
+class VacancyNameFilter(admin.SimpleListFilter):
+    title = 'Vacancy Name'
+    parameter_name = 'vacancy_name'
 
+    def lookups(self, request, model_admin):
+        vacancies = Vacancy.objects.all().values_list('id', 'job_name')
+        return vacancies
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(vacancy__id=self.value())
+
+class JobApplicationAdmin(admin.ModelAdmin):
+    list_display = ('get_user_full_name', 'vacancy', 'application_date', 'get_resume_details')
+    list_filter = ('application_date', VacancyNameFilter)
+
+    def get_user_full_name(self, obj):
+        return f"{obj.user.first_name} {obj.user.last_name}"
+
+    def get_resume_details(self, obj):
+        if obj.resume:
+            resume_link = reverse('admin:applicants_resume_changelist') + f"?user__id__exact={obj.user.id}&vacancy__id__exact={obj.vacancy.id}"
+            return format_html('<a href="{}">{}</a>', resume_link, 'View Resume')
+        else:
+            return "No Resume Submitted"
+
+    get_user_full_name.short_description = 'User'
+    get_resume_details.short_description = 'Resume Details'
+
+
+    
 class CustomUserAdmin(UserAdmin):
     inlines = (AcademicDetailsInline, RelevantCourseInline,)
 
@@ -114,4 +147,5 @@ admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Vacancy)
 admin.site.register(AcademicDetails)
 admin.site.register(RelevantCourse)
+admin.site.register(JobApplication, JobApplicationAdmin)
 

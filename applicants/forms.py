@@ -130,4 +130,9 @@ class RefereeForm(forms.ModelForm):
     class Meta:
         model = Referee
         fields = ['name', 'organization', 'occupation', 'relationship_period', 'email', 'phone']
+
+class JobApplicationForm(forms.ModelForm):
+    class Meta:
+        model = JobApplication
+        fields = ['cover_letter', 'resume', 'cv']
        

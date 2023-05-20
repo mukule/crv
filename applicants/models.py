@@ -181,3 +181,16 @@ class Vacancy(models.Model):
 
     def __str__(self):
         return f"{self.job_name} (Vacancy: {self.job_ref})"
+    
+from django.utils import timezone
+
+class JobApplication(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
+    application_date = models.DateTimeField(default=timezone.now)
+    cover_letter = models.TextField()
+    resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True)
+    cv = models.FileField(upload_to='cv/', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name} - {self.vacancy.job_name} Application"

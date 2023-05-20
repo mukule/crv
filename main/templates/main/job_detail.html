@@ -17,8 +17,8 @@
     </div>
 </div>
 
-  <div class="content">
-   <p>Vacancy Name: {{ vacancy.job_name }}</p>
+<div class="content">
+    <p>Vacancy Name: {{ vacancy.job_name }}</p>
     <p><strong>Job Ref:</strong> {{ vacancy.job_ref }}</p>
     <p><strong>Description:</strong> {{ vacancy.job_description }}</p>
     <p><strong>Reports To:</strong> {{ vacancy.reports_to }}</p>
@@ -32,5 +32,11 @@
     <p><strong>Date Created:</strong> {{ vacancy.date_created }}</p>
     <p><strong>Date Open:</strong> {{ vacancy.date_open }}</p>
     <p><strong>Date Closed:</strong> {{ vacancy.date_closed }}</p>
-  </div>
+    
+    {% if user_has_resume %}
+        <a href="{% url 'apply_job' vacancy_id=vacancy.id %}">Apply Now</a>
+    {% else %}
+        <p class="warning-message">You must submit your resume before applying for a job.</p>
+    {% endif %}
+</div>
 {% endblock content %}

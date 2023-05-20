@@ -414,3 +414,25 @@ def save_resume(request):
     messages.success(request, 'Your Resume Submitted successfully.')
     return redirect('index')
 
+
+
+def apply_job(request, vacancy_id):
+    try:
+        vacancy = Vacancy.objects.get(id=vacancy_id)
+    except Vacancy.DoesNotExist:
+        messages.error(request, "The vacancy does not exist.")
+        return redirect('index')
+
+    if request.method == 'POST':
+        form = JobApplicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.user = request.user
+            application.vacancy = vacancy
+            application.save()
+            messages.success(request, "Job application submitted successfully.")
+            return redirect('index')
+    else:
+        form = JobApplicationForm()
+    
+    return render(request, 'applicants/job_application.html', {'form': form, 'vacancy': vacancy})
