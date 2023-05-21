@@ -2,6 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 import os
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 
 class CustomUser(AbstractUser):
@@ -182,7 +183,7 @@ class Vacancy(models.Model):
     def __str__(self):
         return f"{self.job_name} (Vacancy: {self.job_ref})"
     
-from django.utils import timezone
+
 
 class JobApplication(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -191,6 +192,21 @@ class JobApplication(models.Model):
     cover_letter = models.TextField()
     resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True)
     cv = models.FileField(upload_to='cv/', null=True, blank=True)
+    is_qualified = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.vacancy.job_name} Application"
+
+    def save(self, *args, **kwargs):
+        academic_details = self.user.academicdetails
+        if (
+            academic_details.academic_level == self.vacancy.academic_level and
+            academic_details.area_of_study == self.vacancy.area_of_study and
+            academic_details.specialization == self.vacancy.specialization
+        ):
+            self.is_qualified = True
+        else:
+            self.is_qualified = False
+        super().save(*args, **kwargs)
+
+

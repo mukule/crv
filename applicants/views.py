@@ -18,6 +18,9 @@ from .forms import *
 from django.db.models.query_utils import Q
 from .models import *
 from django.contrib.auth import get_user_model
+from django.views import View
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
 
 User = get_user_model()
 
@@ -436,3 +439,6 @@ def apply_job(request, vacancy_id):
         form = JobApplicationForm()
     
     return render(request, 'applicants/job_application.html', {'form': form, 'vacancy': vacancy})
+
+
+

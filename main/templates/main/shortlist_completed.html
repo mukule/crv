@@ -1,0 +1,7 @@
+<!-- shortlist_completed.html -->
+
+{% for shortlisted_applicant in shortlisted_applicants %}
+    <h3>{{ shortlisted_applicant.applicant.username }}</h3>
+    <p>Vacancy: {{ shortlisted_applicant.vacancy }}</p>
+    <!-- Display other fields of the ShortlistedApplicant model as needed -->
+{% endfor %}

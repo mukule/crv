@@ -121,11 +121,13 @@ class VacancyNameFilter(admin.SimpleListFilter):
             return queryset.filter(vacancy__id=self.value())
 
 class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('get_user_full_name', 'vacancy', 'application_date', 'get_resume_details')
-    list_filter = ('application_date', VacancyNameFilter)
+    list_display = ('user', 'vacancy', 'application_date', 'get_is_qualified', 'get_resume_details')
+    list_filter = ('application_date', 'vacancy__job_name')
 
-    def get_user_full_name(self, obj):
-        return f"{obj.user.first_name} {obj.user.last_name}"
+    def get_is_qualified(self, obj):
+        return obj.is_qualified
+
+    get_is_qualified.short_description = 'Is Qualified'
 
     def get_resume_details(self, obj):
         if obj.resume:
@@ -134,8 +136,8 @@ class JobApplicationAdmin(admin.ModelAdmin):
         else:
             return "No Resume Submitted"
 
-    get_user_full_name.short_description = 'User'
     get_resume_details.short_description = 'Resume Details'
+
 
 
     

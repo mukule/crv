@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 
+
 urlpatterns = [
     path("", views.index, name="index"),
     path('register', views.register, name='register'),
@@ -20,5 +21,6 @@ urlpatterns = [
     path('employment_history/update/<int:employment_history_id>/', views.update_employment_history, name='update_employment_history'),
     path('referee/', views.create_referee, name='referee'),
     path('save-resume/', views.save_resume, name='save_resume'),
+    
 
 ]
