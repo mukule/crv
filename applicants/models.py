@@ -23,6 +23,7 @@ class CustomUser(AbstractUser):
     )
     marital_status = models.CharField(max_length=1, choices=MARITAL_STATUS_CHOICES, blank=True)
     postal_address = models.CharField(max_length=255, blank=True)
+    
 
     def image_upload_to(self, instance=None):
         if instance:
@@ -190,23 +191,19 @@ class JobApplication(models.Model):
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
     application_date = models.DateTimeField(default=timezone.now)
     cover_letter = models.TextField()
-    resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True)
     cv = models.FileField(upload_to='cv/', null=True, blank=True)
     is_qualified = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.vacancy.job_name} Application"
 
-    def save(self, *args, **kwargs):
-        academic_details = self.user.academicdetails
-        if (
-            academic_details.academic_level == self.vacancy.academic_level and
-            academic_details.area_of_study == self.vacancy.area_of_study and
-            academic_details.specialization == self.vacancy.specialization
-        ):
-            self.is_qualified = True
-        else:
-            self.is_qualified = False
-        super().save(*args, **kwargs)
+    
+class QualifiedApplicant(models.Model):
+    job_application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, primary_key=True)
+    applicant_name = models.CharField(max_length=100)
+    applied_vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.applicant_name} - {self.applied_vacancy.job_name} (Qualified Applicant)"
 
+    

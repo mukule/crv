@@ -3,6 +3,8 @@ from django.contrib.auth.admin import UserAdmin
 from .models import *
 from django.urls import reverse
 from django.utils.html import format_html
+from import_export.admin import ExportMixin
+from import_export import resources
 
 
 
@@ -40,8 +42,15 @@ class RelevantCourseInline(admin.TabularInline):
     model = RelevantCourse
     extra = 0
 
+class ResumeResource(resources.ModelResource):
+    class Meta:
+        model = Resume
+
+
+
 @admin.register(Resume)
-class ResumeAdmin(admin.ModelAdmin):
+class ResumeAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = ResumeResource
     list_display = (
         'get_full_name',
         'get_academic_level',
@@ -51,7 +60,7 @@ class ResumeAdmin(admin.ModelAdmin):
         'get_other_courses',
         'get_institution',
         'get_experience',
-        'get_referee'
+        'get_referee',
     )
 
     def get_full_name(self, obj):
@@ -99,13 +108,29 @@ class ResumeAdmin(admin.ModelAdmin):
     get_institution.short_description = 'Institution'
     get_experience.short_description = 'Experience'
     get_referee.short_description = 'Referee'
-
+    
     list_filter = (
         'academic_details__academic_level',
         'academic_details__area_of_study',
         'academic_details__specialization',
         'academic_details__examining_body',
     )
+
+    list_export = (
+        'get_full_name',
+        'get_academic_level',
+        'get_area_of_study',
+        'get_specialization',
+        'get_examining_body',
+        'get_other_courses',
+        'get_institution',
+        'get_experience',
+        'get_referee',
+    )
+
+
+    
+    
 
 
 class VacancyNameFilter(admin.SimpleListFilter):
@@ -120,24 +145,46 @@ class VacancyNameFilter(admin.SimpleListFilter):
         if self.value():
             return queryset.filter(vacancy__id=self.value())
 
-class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'vacancy', 'application_date', 'get_is_qualified', 'get_resume_details')
-    list_filter = ('application_date', 'vacancy__job_name')
+from import_export import fields
+
+class JobApplicationResource(resources.ModelResource):
+    user_full_name = fields.Field(attribute='user__get_full_name', column_name='User')
+    vacancy_name = fields.Field(attribute='vacancy__job_name', column_name='Vacancy')
+    is_qualified = fields.Field(column_name='Is Qualified')
+
+    class Meta:
+        model = JobApplication
+        fields = ('user_full_name', 'vacancy_name', 'application_date', 'is_qualified')
+
+    def dehydrate_is_qualified(self, obj):
+        return 'Yes' if obj.is_qualified else 'No'
+
+class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = JobApplicationResource
+    list_display = ('get_user_full_name', 'get_vacancy_name', 'application_date', 'get_is_qualified', 'get_resume_details')
+    list_filter = ('application_date', 'vacancy__job_name', 'is_qualified')
+
+    def get_user_full_name(self, obj):
+        return obj.user.get_full_name()
+
+    get_user_full_name.short_description = 'User'
+
+    def get_vacancy_name(self, obj):
+        return obj.vacancy.job_name
+
+    get_vacancy_name.short_description = 'Vacancy'
 
     def get_is_qualified(self, obj):
-        return obj.is_qualified
+        return 'Yes' if obj.is_qualified else 'No'
 
     get_is_qualified.short_description = 'Is Qualified'
 
     def get_resume_details(self, obj):
-        if obj.resume:
-            resume_link = reverse('admin:applicants_resume_changelist') + f"?user__id__exact={obj.user.id}&vacancy__id__exact={obj.vacancy.id}"
-            return format_html('<a href="{}">{}</a>', resume_link, 'View Resume')
-        else:
-            return "No Resume Submitted"
+        user_id = obj.user.id
+        resume_link = reverse('admin:applicants_resume_changelist') + f"?user__id__exact={user_id}"
+        return format_html('<a href="{}">{}</a>', resume_link, 'View Resume')
 
     get_resume_details.short_description = 'Resume Details'
-
 
 
     

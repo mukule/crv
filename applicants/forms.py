@@ -134,5 +134,19 @@ class RefereeForm(forms.ModelForm):
 class JobApplicationForm(forms.ModelForm):
     class Meta:
         model = JobApplication
-        fields = ['cover_letter', 'resume', 'cv']
-       
+        fields = ['cover_letter', 'cv']
+        
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(JobApplicationForm, self).__init__(*args, **kwargs)
+        if self.user:
+            self.fields['cv'].initial = self.user.resume.cv  # Set the initial value for the 'cv' field
+    
+    def save(self, commit=True):
+        instance = super(JobApplicationForm, self).save(commit=False)
+        if self.user:
+            instance.user = self.user
+            instance.resume = self.user.resume
+        if commit:
+            instance.save()
+        return instance

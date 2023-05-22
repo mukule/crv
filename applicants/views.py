@@ -21,6 +21,11 @@ from django.contrib.auth import get_user_model
 from django.views import View
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
+import csv
+from django.http import HttpResponse
+from django.http import HttpResponse
+from .resources import ResumeResource
+from tablib import Dataset
 
 User = get_user_model()
 
@@ -418,27 +423,53 @@ def save_resume(request):
     return redirect('index')
 
 
-
 def apply_job(request, vacancy_id):
-    try:
-        vacancy = Vacancy.objects.get(id=vacancy_id)
-    except Vacancy.DoesNotExist:
-        messages.error(request, "The vacancy does not exist.")
+    vacancy = get_object_or_404(Vacancy, id=vacancy_id)
+    user = request.user
+
+    if JobApplication.objects.filter(user=user, vacancy=vacancy).exists():
+        messages.error(request, "You have already applied for this job.")
         return redirect('index')
+
+    # Check if the applicant meets the qualifications
+    try:
+        academic_details = AcademicDetails.objects.get(user=user)
+        academic_level = academic_details.academic_level
+        specialization = academic_details.specialization
+        area_of_study = academic_details.area_of_study
+    except AcademicDetails.DoesNotExist:
+        academic_level = None
+        specialization = None
+        area_of_study = None
+
+    if academic_level == vacancy.academic_level and specialization == vacancy.specialization and area_of_study == vacancy.area_of_study:
+        is_qualified = True
+    else:
+        is_qualified = False
 
     if request.method == 'POST':
         form = JobApplicationForm(request.POST, request.FILES)
         if form.is_valid():
             application = form.save(commit=False)
-            application.user = request.user
+            application.user = user
             application.vacancy = vacancy
+            application.is_qualified = is_qualified  # Set the qualification status
             application.save()
             messages.success(request, "Job application submitted successfully.")
             return redirect('index')
     else:
         form = JobApplicationForm()
-    
+
     return render(request, 'applicants/job_application.html', {'form': form, 'vacancy': vacancy})
 
+def export_resume_to_excel(request, resume_id):
+    try:
+        resume = Resume.objects.get(id=resume_id)
+    except Resume.DoesNotExist:
+        return HttpResponse("Resume not found", status=404)
 
-
+    resume_resource = ResumeResource()
+    dataset = resume_resource.export(queryset=Resume.objects.filter(id=resume_id))
+    response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="resume_{resume_id}_export.xls"'
+    return response

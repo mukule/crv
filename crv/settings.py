@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'applicants',
     'main',
+    'import_export',
 ]
 
 MIDDLEWARE = [
