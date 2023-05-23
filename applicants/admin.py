@@ -53,6 +53,8 @@ class ResumeAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = ResumeResource
     list_display = (
         'get_full_name',
+        'get_email',
+        'get_phone',
         'get_academic_level',
         'get_area_of_study',
         'get_specialization',
@@ -65,6 +67,12 @@ class ResumeAdmin(ExportMixin, admin.ModelAdmin):
 
     def get_full_name(self, obj):
         return f"{obj.user.first_name} {obj.user.last_name}"
+
+    def get_email(self, obj):
+        return obj.user.email
+
+    def get_phone(self, obj):
+        return obj.user.phone
 
     def get_academic_level(self, obj):
         academic_details = obj.academic_details.all()
@@ -100,6 +108,8 @@ class ResumeAdmin(ExportMixin, admin.ModelAdmin):
         )
 
     get_full_name.short_description = 'Full Name'
+    get_email.short_description = 'Email'
+    get_phone.short_description = 'Phone'
     get_academic_level.short_description = 'Academic Level'
     get_area_of_study.short_description = 'Area of Study'
     get_specialization.short_description = 'Specialization'
@@ -118,6 +128,8 @@ class ResumeAdmin(ExportMixin, admin.ModelAdmin):
 
     list_export = (
         'get_full_name',
+        'get_email',
+        'get_phone',
         'get_academic_level',
         'get_area_of_study',
         'get_specialization',
@@ -128,8 +140,9 @@ class ResumeAdmin(ExportMixin, admin.ModelAdmin):
         'get_referee',
     )
 
-
-    
+@admin.register(VacancyType)
+class VacancyTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
     
 
 

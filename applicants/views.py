@@ -455,6 +455,13 @@ def apply_job(request, vacancy_id):
             application.vacancy = vacancy
             application.is_qualified = is_qualified  # Set the qualification status
             application.save()
+            #send mail on succesful application
+            mail_subject = 'Application succesful for {vacancy.job_name}'
+            message = f"Thank you for showing interest to join our organization, we will have a look at you application and notify you on the status of your application."
+            # to_email = payer['email_address']  # Use the payer's email address
+            to_email = request.user.email
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
             messages.success(request, "Job application submitted successfully.")
             return redirect('index')
     else:

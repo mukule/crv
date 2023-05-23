@@ -3,6 +3,8 @@ from django.template.defaultfilters import slugify
 import os
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from ckeditor.fields import RichTextField
+
 
 
 class CustomUser(AbstractUser):
@@ -161,28 +163,35 @@ class Resume(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - Resume"
+    
+class VacancyType(models.Model):
+    name = models.CharField(max_length=100)
 
-
+    def __str__(self):
+        return self.name
 
 
 class Vacancy(models.Model):
     job_name = models.CharField(max_length=100)
     job_ref = models.CharField(max_length=20)
-    job_description = models.TextField()
-    reports_to = models.CharField(max_length=100)
-    academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True)
-    area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.SET_NULL, null=True)
-    specialization = models.ForeignKey(Specialization, on_delete=models.SET_NULL, null=True)
-    requirements = models.TextField()
+    job_description = RichTextField(blank=True, null=True)
+    reports_to = models.CharField(max_length=100, blank=True, null=True)
+    academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
+    area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
+    specialization = models.ForeignKey(Specialization, on_delete=models.SET_NULL, null=True, blank=True)
+    requirements = RichTextField(blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
     number_of_vacancies = models.PositiveIntegerField(blank=True, null=True)
-    responsibilities = models.TextField(blank=True, null=True)
+    responsibilities = RichTextField(blank=True, null=True)
+    vacancy_type = models.ForeignKey(VacancyType, on_delete=models.SET_NULL, null=True, blank=True)
+    document = models.FileField(upload_to='vacancy_documents/', blank=True, null=True)
     date_created = models.DateField(auto_now_add=True)
     date_open = models.DateField()
     date_closed = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.job_name} (Vacancy: {self.job_ref})"
+
     
 
 

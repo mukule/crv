@@ -18,25 +18,31 @@
 </div>
 
 <div class="content">
-    <p>Vacancy Name: {{ vacancy.job_name }}</p>
-    <p><strong>Job Ref:</strong> {{ vacancy.job_ref }}</p>
-    <p><strong>Description:</strong> {{ vacancy.job_description }}</p>
-    <p><strong>Reports To:</strong> {{ vacancy.reports_to }}</p>
-    <p><strong>Academic Level:</strong> {{ vacancy.academic_level }}</p>
-    <p><strong>Area of Study:</strong> {{ vacancy.area_of_study }}</p>
-    <p><strong>Specialization:</strong> {{ vacancy.specialization }}</p>
-    <p><strong>Requirements:</strong> {{ vacancy.requirements }}</p>
-    <p><strong>Department:</strong> {{ vacancy.department }}</p>
-    <p><strong>Duties and responsibilities:</strong> {{ vacancy.responsibilities }}</p>
-    <p><strong>Number of Vacancies:</strong> {{ vacancy.number_of_vacancies }}</p>
-    <p><strong>Date Created:</strong> {{ vacancy.date_created }}</p>
-    <p><strong>Date Open:</strong> {{ vacancy.date_open }}</p>
-    <p><strong>Date Closed:</strong> {{ vacancy.date_closed }}</p>
-    
-    {% if user_has_resume %}
-        <a href="{% url 'apply_job' vacancy_id=vacancy.id %}">Apply Now</a>
+    {% if vacancy.document %}
+        <p><strong>Document:</strong>   <iframe src="{{ vacancy.document.url }}" width="100%" height="600"></iframe></p>
     {% else %}
-        <p class="warning-message">You must submit your resume before applying for a job.</p>
+        <p><strong>Vacancy Name:</strong> {{ vacancy.job_name }}</p>
+        <p><strong>Job Ref:</strong> {{ vacancy.job_ref }}</p>
+        <p><strong>Description:</strong> {{ vacancy.job_description|safe }}</p>
+        <p><strong>Reports To:</strong> {{ vacancy.reports_to }}</p>
+        <p><strong>Academic Level:</strong> {{ vacancy.academic_level }}</p>
+        <p><strong>Area of Study:</strong> {{ vacancy.area_of_study }}</p>
+        <p><strong>Specialization:</strong> {{ vacancy.specialization }}</p>
+        <p><strong>Requirements:</strong> {{ vacancy.requirements|safe }}</p>
+        <p><strong>Department:</strong> {{ vacancy.department }}</p>
+        <p><strong>Duties and responsibilities:</strong> {{ vacancy.responsibilities|safe }}</p>
+        <p><strong>Number of Vacancies:</strong> {{ vacancy.number_of_vacancies }}</p>
+        <p><strong>Date Created:</strong> {{ vacancy.date_created }}</p>
+        <p><strong>Date Open:</strong> {{ vacancy.date_open }}</p>
+        <p><strong>Date Closed:</strong> {{ vacancy.date_closed }}</p>
+        
+        
+        {% if user_has_resume %}
+            <a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" href="{% url 'apply_job' vacancy_id=vacancy.id %}">Apply this Position</a>
+        {% else %}
+            <p class="warning-message">You must submit your resume before applying for a job.</p>
+        {% endif %}
     {% endif %}
 </div>
+
 {% endblock content %}

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'applicants',
     'main',
     'import_export',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -147,5 +148,18 @@ PASSWORD_RESET_TIMEOUT = 14400
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'login'
 AUTH_USER_MODEL = 'applicants.CustomUser'
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
+CKEDITOR_UPLOAD_PATH = "ckeditor_uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 800,
+    },
+}
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

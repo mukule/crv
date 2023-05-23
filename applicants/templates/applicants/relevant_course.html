@@ -31,7 +31,7 @@
                 </fieldset>
                 <div class="form-row text-center">
                     <div class="form-group col-md-12 mb-2">
-                        <button class="btn btn-success" type="submit">Add Relevant Course</button>
+                        <button style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" class="btn btn-success" type="submit">Add Relevant Course</button>
                     </div>
                 </div>
                 
@@ -55,7 +55,7 @@
                         <td>{{ relevant_course.institution }}</td>
                         <td>{{ relevant_course.start_date }}</td>
                         <td>{{ relevant_course.completion_date }}</td>
-                        <td><a class="btn btn-success" href="{% url 'update_relevant_course' relevant_course.id %}">Update</a></td>
+                        <td><a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" class="btn btn-success" href="{% url 'update_relevant_course' relevant_course.id %}">Update</a></td>
                     </tr>
                 {% empty %}
                     <tr>

@@ -13,7 +13,7 @@
                     <a href="{% url 'index'%}"><i class="menu-icon fa fa-bullhorn"></i>Advertised Jobs</a>
                 </li>
                 <li class="menu-item">
-                    <a href=""><i class="menu-icon fa fa-bookmark-o"></i>Internships</a>
+                    <a href="{% url 'internships' %}"><i class="menu-icon fa fa-bookmark-o"></i>Internships</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="menu-title">My Profile</li><!-- /.menu-title -->
@@ -42,7 +42,7 @@
                     <a href="{% url 'index'%}"><i class="menu-icon fa fa-bullhorn"></i>Job</a>
                 </li>
                 <li class="menu-item mb-5">
-                    <a href=""><i class="menu-icon fa fa-bookmark"></i>Intership</a>
+                    <a href="{% url 'internships' %}"><i class="menu-icon fa fa-bookmark"></i>Intership</a>
                 </li>
                 {% else %}
                 <li class="menu-item">

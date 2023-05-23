@@ -45,7 +45,7 @@
                 </fieldset>
                 <div class="form-row text-center">
                     <div class="form-group col-md-12 mb-2">
-                        <button class="btn btn-success" type="submit">Add academic Record</button>
+                        <button style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" type="submit">Add academic Record</button>
                     </div>
                 </div>
                 
@@ -80,7 +80,7 @@
                             <td>{{ academic_detail.start_year }}</td>
                             <td>{{ academic_detail.end_year }}</td>
                             <td>{{ academic_detail.graduation_year }}</td>
-                            <td><a class="btn btn-success" href="{% url 'update_academic_details' academic_detail.id %}">Update</a></td>
+                            <td><a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" href="{% url 'update_academic_details' academic_detail.id %}">Update</a></td>
                         </tr>
                     {% endfor %}
                 {% else %}

@@ -32,7 +32,7 @@
                 </fieldset>
                 <div class="form-row text-center">
                     <div class="form-group col-md-12 mb-2">
-                        <button class="btn btn-success" type="submit">Add Employment History</button>
+                        <button style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" type="submit">Add Employment History</button>
                     </div>
                 </div>
                 
@@ -59,7 +59,7 @@
                         <td>{{ employment_history.start_date }}</td>
                         <td>{{ employment_history.end_date }}</td>
                         <td>
-                            <a href="{% url 'update_employment_history' employment_history.id %}" class="btn btn-success">Update</a>
+                            <a style="background-color: #89c73e; border: #89c73e;" href="{% url 'update_employment_history' employment_history.id %}" class="btn btn-success">Update</a>
                             <!-- Add other actions or buttons as needed -->
                         </td>
                     </tr>
