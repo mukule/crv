@@ -272,6 +272,8 @@ def update_academic_details(request, academic_details_id):
             form.save()
             messages.success(request, 'Academic details updated successfully.')
             return redirect('academic_details')  # Redirect to the academic details page
+        else:
+            print(form.errors)  # Debug statement to print form errors
 
     else:
         form = AcademicDetailsForm(instance=academic_details)

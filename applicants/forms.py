@@ -104,13 +104,13 @@ class AcademicDetailsForm(ModelForm):
     institution_name = forms.CharField(max_length=100)
     admission_number = forms.CharField(max_length=20)
     start_year = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
-    end_year = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
-    graduation_year = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    end_year = forms.DateField(widget=DateInput(attrs={'type': 'date'}), required=False)
+    graduation_year = forms.DateField(widget=DateInput(attrs={'type': 'date'}), required=False)
 
     class Meta:
         model = AcademicDetails
         fields = ['academic_level', 'area_of_study', 'specialization', 'examining_body',
-                  'institution_name', 'admission_number', 'start_year', 'end_year', 'graduation_year']
+                  'institution_name', 'admission_number', 'start_year', 'end_year', 'graduation_year', 'is_studying']
         
 class RelevantCourseForm(forms.ModelForm):
     start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
@@ -150,3 +150,10 @@ class JobApplicationForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+class JobSearchForm(forms.Form):
+    keywords = forms.CharField(max_length=100, required=False)
+    area_of_study = forms.ModelChoiceField(queryset=AreaOfStudy.objects.all(), required=False)
+    specialization = forms.ModelChoiceField(queryset=Specialization.objects.all(), required=False)
+    department = forms.CharField(max_length=100, required=False)
+    vacancy_type = forms.ModelChoiceField(queryset=VacancyType.objects.all(), required=False)

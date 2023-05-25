@@ -41,11 +41,16 @@
                             {{ form.graduation_year|as_crispy_field }}
                         </div>
                     </div> 
+                    <div class="form-row">
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.is_studying|as_crispy_field }}
+                        </div>
+                    </div> 
                     
                 </fieldset>
                 <div class="form-row text-center">
-                    <div class="form-group col-md-12 mb-0">
-                        <button class="btn btn-success" type="submit">Update academic Record</button>
+                    <div class="form-group col-md-12 mb-2">
+                        <button style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" type="submit">update academic Details</button>
                     </div>
                 </div>
                 

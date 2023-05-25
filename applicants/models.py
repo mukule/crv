@@ -86,6 +86,7 @@ class AcademicDetails(models.Model):
     start_year = models.DateField(blank=True, null=True)
     end_year = models.DateField(blank=True, null=True)
     graduation_year = models.DateField(blank=True, null=True)
+    is_studying = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
