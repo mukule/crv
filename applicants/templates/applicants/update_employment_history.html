@@ -3,8 +3,23 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-12 col-md-8">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="position-relative">
+                        <img src="{% static 'main/images/banner.png' %}" alt="Image description" class="img-fluid" style="border-radius: 10px;">
+                        <div class="image-overlay d-flex justify-content-center align-items-center d-none d-md-flex">
+                            <div class="image-text">
+                                <h5>update work experience</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style" style="min-height:65vh;">
-        <legend class="border-bottom mb-4">Relevant Course</legend>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
                 <fieldset class="form-group">

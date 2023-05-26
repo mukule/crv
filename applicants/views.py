@@ -471,14 +471,3 @@ def apply_job(request, vacancy_id):
 
     return render(request, 'applicants/job_application.html', {'form': form, 'vacancy': vacancy})
 
-def export_resume_to_excel(request, resume_id):
-    try:
-        resume = Resume.objects.get(id=resume_id)
-    except Resume.DoesNotExist:
-        return HttpResponse("Resume not found", status=404)
-
-    resume_resource = ResumeResource()
-    dataset = resume_resource.export(queryset=Resume.objects.filter(id=resume_id))
-    response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = f'attachment; filename="resume_{resume_id}_export.xls"'
-    return response
