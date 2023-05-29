@@ -434,12 +434,12 @@ def apply_job(request, vacancy_id):
         return redirect('index')
 
     # Check if the applicant meets the qualifications
-    try:
-        academic_details = AcademicDetails.objects.get(user=user)
+    academic_details = AcademicDetails.objects.filter(user=user).first()
+    if academic_details:
         academic_level = academic_details.academic_level
         specialization = academic_details.specialization
         area_of_study = academic_details.area_of_study
-    except AcademicDetails.DoesNotExist:
+    else:
         academic_level = None
         specialization = None
         area_of_study = None
@@ -457,17 +457,17 @@ def apply_job(request, vacancy_id):
             application.vacancy = vacancy
             application.is_qualified = is_qualified  # Set the qualification status
             application.save()
-            #send mail on succesful application
-            mail_subject = 'Application succesful for {vacancy.job_name}'
-            message = f"Thank you for showing interest to join our organization, we will have a look at you application and notify you on the status of your application."
-            # to_email = payer['email_address']  # Use the payer's email address
+
+            # Send email on successful application
+            mail_subject = f"Application successful for {vacancy.job_name}"
+            message = f"Thank you for showing interest in joining our organization. We will review your application and notify you of the status."
             to_email = request.user.email
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
+
             messages.success(request, "Job application submitted successfully.")
             return redirect('index')
     else:
         form = JobApplicationForm()
 
     return render(request, 'applicants/job_application.html', {'form': form, 'vacancy': vacancy})
-
