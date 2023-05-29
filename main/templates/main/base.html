@@ -64,6 +64,25 @@
     align-items: center;
 }
 
+@media (max-width: 576px) {
+    .table-vertical thead {
+        display: none;
+    }
+    .table-vertical tbody tr {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .table-vertical tbody td {
+        display: block;
+        text-align: left;
+    }
+    .table-vertical tbody td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+    }
+}
+
     
     </style>
 </head>

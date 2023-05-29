@@ -30,115 +30,145 @@
 <p>Phone: {{ resume.user.phone }}</p>
 <hr>
 <h2>Academic Details</h2>
-{% if academic_details %}
-<table>
-    <tr>
-        <th>Institution</th>
-        <th>Admission Number</th>
-        <th>Academic Level</th>
-        <th>Area of Study</th>
-        <th>Specialization</th>
-        <th>Examining Body</th>
-        <th>Start Year</th>
-        <th>End Year</th>
-        <th>Graduation Year</th>
-        <th>Is Studying</th>
-    </tr>
-    {% for academic_detail in academic_details %}
-        <tr>
-            <td>{{ academic_detail.institution_name }}</td>
-            <td>{{ academic_detail.admission_number }}</td>
-            <td>{{ academic_detail.academic_level }}</td>
-            <td>{{ academic_detail.area_of_study }}</td>
-            <td>{{ academic_detail.specialization }}</td>
-            <td>{{ academic_detail.examining_body }}</td>
-            <td>{{ academic_detail.start_year|date:"Y" }}</td>
-            <td>{{ academic_detail.end_year|date:"Y" }}</td>
-            <td>{{ academic_detail.graduation_year|date:"Y" }}</td>
-            <td>{{ academic_detail.is_studying }}</td>
-        </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No academic details found for the user.</p>
-{% endif %}
+<div class="table-responsive">
+    <table class="table table-striped table-vertical">
+        <thead>
+            <tr>
+                <th data-label="Institution">Institution</th>
+                <th data-label="Admission Number">Admission Number</th>
+                <th data-label="Academic Level">Academic Level</th>
+                <th data-label="Area of Study">Area of Study</th>
+                <th data-label="Specialization">Specialization</th>
+                <th data-label="Examining Body">Examining Body</th>
+                <th data-label="Start Year">Start Year</th>
+                <th data-label="End Year">End Year</th>
+                <th data-label="Graduation Year">Graduation Year</th>
+                <th data-label="Is Studying">Is Studying</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if academic_details %}
+                {% for academic_detail in academic_details %}
+                    <tr>
+                        <td data-label="Institution">{{ academic_detail.institution_name }}</td>
+                        <td data-label="Admission Number">{{ academic_detail.admission_number }}</td>
+                        <td data-label="Academic Level">{{ academic_detail.academic_level }}</td>
+                        <td data-label="Area of Study">{{ academic_detail.area_of_study }}</td>
+                        <td data-label="Specialization">{{ academic_detail.specialization }}</td>
+                        <td data-label="Examining Body">{{ academic_detail.examining_body }}</td>
+                        <td data-label="Start Year">{{ academic_detail.start_year|date:"Y" }}</td>
+                        <td data-label="End Year">{{ academic_detail.end_year|date:"Y" }}</td>
+                        <td data-label="Graduation Year">{{ academic_detail.graduation_year|date:"Y" }}</td>
+                        <td data-label="Is Studying">{{ academic_detail.is_studying }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="10">No academic details found for this account.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
 <hr>
-
 <h2>Relevant Courses</h2>
-{% if relevant_courses %}
-<table>
-    <tr>
-        <th>Course Name</th>
-        <th>Institution</th>
-        <th>Certification</th>
-        <th>Start Year</th>
-        <th>Completion Year</th>
-    </tr>
-    {% for course in relevant_courses %}
-        <tr>
-            <td>{{ course.course_name }}</td>
-            <td>{{ course.institution }}</td>
-            <td>{{ course.certification }}</td>
-            <td>{{ course.start_date|date:"Y" }}</td>
-            <td>{{ course.completion_date|date:"Y" }}</td>
-        </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No relevant courses found for the user.</p>
-{% endif %}
+<div class="table-responsive">
+    <table class="table table-striped table-vertical">
+        <thead>
+            <tr>
+                <th data-label="Course Name">Course Name</th>
+                <th data-label="Institution">Institution</th>
+                <th data-label="Certification">Certification</th>
+                <th data-label="Start Year">Start Year</th>
+                <th data-label="Completion Year">Completion Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if relevant_courses %}
+                {% for course in relevant_courses %}
+                    <tr>
+                        <td data-label="Course Name">{{ course.course_name }}</td>
+                        <td data-label="Institution">{{ course.institution }}</td>
+                        <td data-label="Certification">{{ course.certification }}</td>
+                        <td data-label="Start Year">{{ course.start_date|date:"Y" }}</td>
+                        <td data-label="Completion Year">{{ course.completion_date|date:"Y" }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5">No relevant courses found for this account.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
 <hr>
 <h2>Employment History</h2>
-{% if employment_histories %}
-    <table>
-        <tr>
-            <th>Company</th>
-            <th>Position</th>
-            <th>Position Description</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-        </tr>
-        {% for history in employment_histories %}
+<div class="table-responsive">
+    <table class="table table-striped table-vertical">
+        <thead>
             <tr>
-                <td>{{ history.company_name }}</td>
-                <td>{{ history.position }}</td>
-                <td>{{ history.position_description }}</td>
-                <td>{{ history.start_date|date:"Y" }}</td>
-                <td>{{ history.end_date|date:"Y" }}</td>
+                <th data-label="Company">Company</th>
+                <th data-label="Position">Position</th>
+                <th data-label="Position Description">Position Description</th>
+                <th data-label="Start Date">Start Date</th>
+                <th data-label="End Date">End Date</th>
             </tr>
-        {% endfor %}
+        </thead>
+        <tbody>
+            {% if employment_histories %}
+                {% for history in employment_histories %}
+                    <tr>
+                        <td data-label="Company">{{ history.company_name }}</td>
+                        <td data-label="Position">{{ history.position }}</td>
+                        <td data-label="Position Description">{{ history.position_description }}</td>
+                        <td data-label="Start Date">{{ history.start_date|date:"Y" }}</td>
+                        <td data-label="End Date">{{ history.end_date|date:"Y" }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5">No employment history found for this account.</td>
+                </tr>
+            {% endif %}
+        </tbody>
     </table>
-{% else %}
-    <p>No employment history found for the user.</p>
-{% endif %}
+</div>
 <hr>
 <h2>Referees</h2>
-{% if referees %}
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Occupation</th>
-            <th>Organization</th>
-            <th>Relationship Period</th>
-            <th>Email</th>
-            <th>Phone</th>
-        </tr>
-        {% for referee in referees %}
+<div class="table-responsive">
+    <table class="table table-striped table-vertical">
+        <thead>
             <tr>
-                <td>{{ referee.name }}</td>
-                <td>{{ referee.occupation }}</td>
-                <td>{{ referee.organization }}</td>
-                <td>{{ referee.relationship_period }}</td>
-                <td>{{ referee.email }}</td>
-                <td>{{ referee.phone }}</td>
+                <th data-label="Name">Name</th>
+                <th data-label="Occupation">Occupation</th>
+                <th data-label="Organization">Organization</th>
+                <th data-label="Relationship Period">Relationship Period</th>
+                <th data-label="Email">Email</th>
+                <th data-label="Phone">Phone</th>
             </tr>
-        {% endfor %}
+        </thead>
+        <tbody>
+            {% if referees %}
+                {% for referee in referees %}
+                    <tr>
+                        <td data-label="Name">{{ referee.name }}</td>
+                        <td data-label="Occupation">{{ referee.occupation }}</td>
+                        <td data-label="Organization">{{ referee.organization }}</td>
+                        <td data-label="Relationship Period">{{ referee.relationship_period }}</td>
+                        <td data-label="Email">{{ referee.email }}</td>
+                        <td data-label="Phone">{{ referee.phone }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">No referees found for this account.</td>
+                </tr>
+            {% endif %}
+        </tbody>
     </table>
-{% else %}
-    <p>No referees found for the user.</p>
-{% endif %}
-
-
+</div>
+<hr
 {% endif %}
 </div>
 </div>

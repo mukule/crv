@@ -54,33 +54,36 @@
         </form>
     </div>
     <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Course Name</th>
-                    <th>Institution</th>
-                    <th>Start Date</th>
-                    <th>Completion Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for relevant_course in relevant_courses %}
+        <div class="table-responsive">
+            <table class="table table-striped table-vertical">
+                <thead>
                     <tr>
-                        <td>{{ relevant_course.course_name }}</td>
-                        <td>{{ relevant_course.institution }}</td>
-                        <td>{{ relevant_course.start_date }}</td>
-                        <td>{{ relevant_course.completion_date }}</td>
-                        <td><a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" class="btn btn-success" href="{% url 'update_relevant_course' relevant_course.id %}">Update</a></td>
+                        <th data-label="Course Name">Course Name</th>
+                        <th data-label="Institution">Institution</th>
+                        <th data-label="Start Date">Start Date</th>
+                        <th data-label="Completion Date">Completion Date</th>
+                        <th data-label="Action">Action</th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="4">No relevant courses found.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for relevant_course in relevant_courses %}
+                        <tr>
+                            <td data-label="Course Name">{{ relevant_course.course_name }}</td>
+                            <td data-label="Institution">{{ relevant_course.institution }}</td>
+                            <td data-label="Start Date">{{ relevant_course.start_date }}</td>
+                            <td data-label="Completion Date">{{ relevant_course.completion_date }}</td>
+                            <td data-label="Action"><a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" href="{% url 'update_relevant_course' relevant_course.id %}">Update</a></td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No relevant courses found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+    
     
 </div>
 {% endblock content %}
