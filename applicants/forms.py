@@ -9,7 +9,6 @@ from django.forms import ModelForm, DateInput
 from .models import *
 
 
-
 class UserRegisterForm(UserCreationForm):
     username = forms.CharField(
         max_length=30,
@@ -25,39 +24,47 @@ class UserRegisterForm(UserCreationForm):
         max_length=30,
         widget=forms.TextInput(attrs={'placeholder': 'Enter First Name', 'class': 'form-control'}),
         label='',
-       
     )
     last_name = forms.CharField(
         max_length=30,
         widget=forms.TextInput(attrs={'placeholder': 'Enter Last Name', 'class': 'form-control'}),
         label='',
-        
     )
- 
-
     password1 = forms.CharField(
         label='',
         widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control', 'autocomplete': 'new-password'}),
-        
     )
     password2 = forms.CharField(
         label='',
         widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control', 'autocomplete': 'new-password'}),
-        
     )
 
+    INTEREST_CHOICES = (
+        ('I', 'Internship'),
+        ('E', 'Employment'),
+    )
+    interest = forms.ChoiceField(
+        choices=INTEREST_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select your interest'}),
+        label='',
+        required=True,
+    )
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'interest']
 
     def save(self, commit=True):
         user = super(UserRegisterForm, self).save(commit=False)
         user.email = self.cleaned_data['email']
+        user.interest = self.cleaned_data['interest']
         if commit:
             user.save()
         return user
-    
+
+
+
+
 class UserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)
@@ -100,32 +107,85 @@ class PasswordResetForm(PasswordResetForm):
         super(PasswordResetForm, self).__init__(*args, **kwargs)
 
 
-class AcademicDetailsForm(ModelForm):
+class AcademicDetailsForm(forms.ModelForm):
     institution_name = forms.CharField(max_length=100)
     admission_number = forms.CharField(max_length=20)
-    start_year = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
-    end_year = forms.DateField(widget=DateInput(attrs={'type': 'date'}), required=False)
-    graduation_year = forms.DateField(widget=DateInput(attrs={'type': 'date'}), required=False)
+    start_year = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    end_year = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    graduation_year = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
 
     class Meta:
         model = AcademicDetails
         fields = ['academic_level', 'area_of_study', 'specialization', 'examining_body',
                   'institution_name', 'admission_number', 'start_year', 'end_year', 'graduation_year', 'is_studying']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_year = cleaned_data.get('start_year')
+        end_year = cleaned_data.get('end_year')
+        graduation_year = cleaned_data.get('graduation_year')
+
+        if start_year and end_year and start_year > end_year:
+            self.add_error('start_year', "Start year cannot be greater than end year.")
+
+        if end_year and graduation_year and end_year > graduation_year:
+            self.add_error('end_year', "End year cannot be greater than graduation year.")
+
+        present_date = timezone.now().date()
+
+        if end_year and end_year > present_date:
+            self.add_error('end_year', "End year cannot be greater than the present date.")
+
+        if graduation_year and graduation_year > present_date:
+            self.add_error('graduation_year', "Graduation year cannot be greater than the present date.")
         
 class RelevantCourseForm(forms.ModelForm):
-    start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
-    completion_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    completion_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
     class Meta:
         model = RelevantCourse
         fields = ['course_name', 'institution', 'certification', 'start_date', 'completion_date']
 
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        completion_date = cleaned_data.get('completion_date')
+
+        if start_date and completion_date and start_date > completion_date:
+            self.add_error('start_date', "Start date cannot be greater than completion date.")
+
+        present_date = timezone.now().date()
+
+        if start_date and start_date > present_date:
+            self.add_error('start_date', "Start date cannot be greater than the present date.")
+
+        if completion_date and completion_date > present_date:
+            self.add_error('completion_date', "Completion date cannot be greater than the present date.")
+
 class EmploymentHistoryForm(forms.ModelForm):
-    start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
-    end_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
     class Meta:
         model = EmploymentHistory
         fields = ['company_name', 'position', 'position_description', 'start_date', 'end_date']
 
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        if start_date and end_date and start_date > end_date:
+            self.add_error('start_date', "Start date cannot be greater than end date.")
+
+        present_date = timezone.now().date()
+
+        if start_date and start_date > present_date:
+            self.add_error('start_date', "Start date cannot be greater than the present date.")
+
+        if end_date and end_date > present_date:
+            self.add_error('end_date', "End date cannot be greater than the present date.")
 class RefereeForm(forms.ModelForm):
     class Meta:
         model = Referee

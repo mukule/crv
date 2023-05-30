@@ -5,6 +5,13 @@ from django.urls import reverse
 from django.utils.html import format_html
 from import_export.admin import ExportMixin
 from import_export import resources
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
 
 
 
@@ -100,12 +107,24 @@ class ResumeAdmin(ExportMixin, admin.ModelAdmin):
 
     def get_experience(self, obj):
         employment_histories = obj.employment_histories.all()
-        return ', '.join(f"{history.company_name} - {history.position}" for history in employment_histories)
+        experience_list = []
+        for history in employment_histories:
+            experience = f"{history.company_name} - {history.position}"
+            if history.start_date and history.end_date:
+                start_year = history.start_date.year
+                end_year = history.end_date.year
+                years_of_experience = end_year - start_year
+                experience += f" ({years_of_experience} years)"
+            experience_list.append(experience)
+        return ', '.join(experience_list)
+
 
     def get_referee(self, obj):
         return ', '.join(
             f"{referee.name} ({referee.organization})" for referee in obj.referees.all()
         )
+    
+    
 
     get_full_name.short_description = 'Full Name'
     get_email.short_description = 'Email'
@@ -176,6 +195,7 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = JobApplicationResource
     list_display = ('get_user_full_name', 'get_vacancy_name', 'application_date', 'get_is_qualified', 'get_resume_details')
     list_filter = ('application_date', 'vacancy__job_name', 'is_qualified')
+    actions = ['send_email_to_applicants']
 
     def get_user_full_name(self, obj):
         return obj.user.get_full_name()
@@ -199,11 +219,49 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
 
     get_resume_details.short_description = 'Resume Details'
 
-
     
+    def send_email_to_applicants(self, request, queryset):
+        if request.method == 'POST':
+            subject = request.POST.get('subject')
+            message = request.POST.get('message')
+
+            if subject and message:
+                for application in queryset:
+                    to_email = [application.user.email]
+
+                # Render the email template
+                    email_html = render_to_string('applicants/admin/email_template.html', {'message': message})
+
+                # Create a plain text version of the email
+                    email_text = strip_tags(email_html)
+
+                # Send the email
+                    send_mail(subject, email_text, to_email, html_message=email_html)
+
+                self.message_user(request, 'Emails have been sent to selected applicants.')
+                return redirect('admin:applicants_jobapplication_changelist')
+
+            messages.error(request, 'Subject and message are required.')
+    
+        return render(request, 'admin/send_email_to_applicants.html')
+
+    send_email_to_applicants.short_description = 'Send email to selected applicants'
+
 class CustomUserAdmin(UserAdmin):
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'email', 'interest', 'is_organization_staff')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+    list_display = ('username', 'full_name', 'email', 'interest', 'is_staff', 'is_superuser', 'is_organization_staff')
+
     inlines = (AcademicDetailsInline, RelevantCourseInline,)
 
+    def full_name(self, obj):
+        return obj.get_full_name()
+
+    full_name.short_description = 'Name'
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Vacancy)

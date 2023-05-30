@@ -89,6 +89,41 @@ def internships(request):
     
     return render(request, 'main/internships.html', {'form': form, 'vacancies': internship_vacancies})
 
+def internal_adverts(request):
+    current_date = timezone.now().date()
+    all_internal_vacancies = Vacancy.objects.filter(vacancy_type__name='Internal', date_open__lte=current_date, date_closed__gte=current_date)
+    form = JobSearchForm()
+
+    if request.method == 'GET' and 'search' in request.GET:
+        form = JobSearchForm(request.GET)
+        if form.is_valid():
+            # Process the form data and filter the internal job adverts accordingly
+            keywords = form.cleaned_data['keywords']
+            area_of_study = form.cleaned_data['area_of_study']
+            specialization = form.cleaned_data['specialization']
+            department = form.cleaned_data['department']
+            vacancy_type = form.cleaned_data['vacancy_type']
+
+            # Apply the search filters on the all_internal_vacancies queryset
+            internal_vacancies = all_internal_vacancies.filter(
+                Q(job_name__icontains=keywords) |
+                Q(area_of_study=area_of_study) |
+                Q(specialization=specialization) |
+                Q(department__icontains=department) |
+                Q(vacancy_type=vacancy_type)
+            )
+
+            if not internal_vacancies.exists():
+                # If no internal job adverts match the search criteria, display a message
+                messages.info(request, "No internal job adverts match the search criteria.")
+
+    else:
+        internal_vacancies = all_internal_vacancies
+
+    return render(request, 'main/internal_adverts.html', {'form': form, 'vacancies': internal_vacancies})
+
+
+
 @method_decorator(login_required, name='dispatch')
 class ResumeView(TemplateView):
     template_name = 'main/resume.html'

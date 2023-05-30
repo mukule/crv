@@ -4,6 +4,7 @@ import os
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from ckeditor.fields import RichTextField
+from datetime import date
 
 
 
@@ -23,6 +24,12 @@ class CustomUser(AbstractUser):
         ('D', 'Divorced'),
         ('W', 'Widowed'),
     )
+    INTEREST_CHOICES = (
+    ('I', 'Internship'),
+    ('E', 'Employment'),
+)
+    interest = models.CharField(max_length=255, choices=INTEREST_CHOICES, blank=True)
+    is_organization_staff = models.BooleanField(default=False)
     marital_status = models.CharField(max_length=1, choices=MARITAL_STATUS_CHOICES, blank=True)
     postal_address = models.CharField(max_length=255, blank=True)
     
@@ -161,6 +168,17 @@ class Resume(models.Model):
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     referees = models.ManyToManyField(Referee, blank=True)
+
+    @property
+    def years_of_experience(self):
+        if self.employment_start_date and self.employment_end_date:
+            today = date.today()
+            total_years = today.year - self.employment_start_date.year
+            if today.month < self.employment_start_date.month or (today.month == self.employment_start_date.month and today.day < self.employment_start_date.day):
+                total_years -= 1
+            return total_years
+        else:
+            return 0
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - Resume"

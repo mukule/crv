@@ -19,14 +19,6 @@ from django.db.models.query_utils import Q
 from .models import *
 from django.contrib.auth import get_user_model
 from django.views import View
-from django.contrib.admin.views.decorators import staff_member_required
-from django.utils.decorators import method_decorator
-import csv
-from django.http import HttpResponse
-from django.http import HttpResponse
-from .resources import ResumeResource
-from tablib import Dataset
-
 User = get_user_model()
 
 
@@ -52,7 +44,6 @@ def activateEmail(request, user, to_email):
     else:
         messages.error(request, f'If you did not receive the email, Please confirm that {to_email} this is your actual mail')
 
-
 @user_not_authenticated
 def register(request):
     if request.method == "POST":
@@ -63,10 +54,10 @@ def register(request):
             user.save()
             activateEmail(request, user, form.cleaned_data.get('email'))
             return redirect('index')
-
         else:
-            for error in list(form.errors.values()):
-                messages.error(request, error)
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
 
     else:
         form = UserRegisterForm()
@@ -75,8 +66,7 @@ def register(request):
         request=request,
         template_name="applicants/register.html",
         context={"form": form}
-        )
-
+    )
 def activate(request, uidb64, token):
     User = get_user_model()
     try:

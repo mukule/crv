@@ -1,0 +1,21 @@
+<!-- admin/send_email_to_applicants.html -->
+
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+  <h1>Send email to selected applicants</h1>
+
+  <form method="post" action="">
+    {% csrf_token %}
+    <p>
+      <label for="id_subject">Subject:</label>
+      <input type="text" name="subject" id="id_subject">
+    </p>
+    <p>
+      <label for="id_message">Message:</label>
+      <textarea name="message" id="id_message" rows="4"></textarea>
+    </p>
+    <input type="submit" name="apply" value="Send email">
+  </form>
+{% endblock %}

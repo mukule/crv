@@ -3,25 +3,39 @@
     <nav class="navbar navbar-expand-sm navbar-default">
         <div id="main-menu" class="main-menu collapse navbar-collapse">
             <ul class="nav navbar-nav">
+                {% if user.is_authenticated %}
                 <li class="menu-item btn-success mt-2 mb-2" id="dashboard">
                     <a href="{% url 'index'%}" class="text-white d-flex align-items-center">
                         <i class="menu-icon fa fa-home"></i>
                         Dashboard
                     </a>
                 </li>
+                <li class="menu-title">Vacancy</li>
+                {% if user.interest == 'E' %}
                 <li class="menu-item">
-                    <a href="{% url 'index'%}"><i class="menu-icon fa fa-bullhorn"></i>Advertised Jobs</a>
+                    <a href="{% url 'index' %}"><i class="menu-icon fa fa-bullhorn"></i>Advertised Jobs</a>
                 </li>
+                    {% if user.is_organization_staff %}
+                    <li class="menu-item">
+                        <a href="{% url 'internal_adverts' %}"><i class="menu-icon fa fa-user-md"></i>Internal adverts</a>
+                    </li>
+                    {% endif %}
+            {% elif user.interest == 'I' %}
                 <li class="menu-item">
                     <a href="{% url 'internships' %}"><i class="menu-icon fa fa-bookmark-o"></i>Internships</a>
                 </li>
-                {% if user.is_authenticated %}
-                <li class="menu-title">My Profile</li><!-- /.menu-title -->
+                    {% if user.is_organization_staff %}
+                    <li class="menu-item">
+                        <a href="{% url 'internal_adverts' %}"><i class="menu-icon fa fa-user-md"></i>Internal adverts</a>
+                    </li>
+                    {% endif %}
+            {% endif %}
+                <li class="menu-title">My Profile</li>
                 <li class="menu-item">
                     <a href="{% url 'profile' user.username %}"><i class="menu-icon fa fa-user-md"></i>Personnal Details</a>
                 </li>
                 <li class="menu-item">
-                    <a href="{% url 'academic_details'%}"><i class="menu-icon fa fa-book"></i>Academic Qualifications</a>
+                    <a href="{% url 'academic_details'%}"><i class="menu-icon fa fa-book"></i>Education</a>
                 </li>
                 <li class="menu-item">
                     <a href="{% url 'relevant_courses'%}"><i class="menu-icon fa fa-sitemap"></i>Other Relevant courses</a>
@@ -38,16 +52,19 @@
                 <li class="menu-item">
                     <a href="{% url 'resume'%}"><i class="menu-icon fa fa-envelope"></i>view Resume</a>
                 </li>
-
-                <li class="menu-title">APPLY</li><!-- /.menu-title -->
-
-                <li class="menu-item">
-                    <a href="{% url 'index'%}"><i class="menu-icon fa fa-bullhorn"></i>Job</a>
-                </li>
-                <li class="menu-item mb-5">
-                    <a href="{% url 'internships' %}"><i class="menu-icon fa fa-bookmark"></i>Intership</a>
-                </li>
                 {% else %}
+                <li class="menu-item btn-success mt-2 mb-2" id="dashboard">
+                    <a href="{% url 'index'%}" class="text-white d-flex align-items-center">
+                        <i class="menu-icon fa fa-home"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'index'%}"><i class="menu-icon fa fa-bullhorn"></i>Advertised Jobs</a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'internships' %}"><i class="menu-icon fa fa-bookmark-o"></i>Internships</a>
+                </li>
                 <li class="menu-item">
                     <a href="{% url 'login' %}"><i class="menu-icon fa fa-bullhorn"></i>Login</a>
                 </li>
