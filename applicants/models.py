@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from ckeditor.fields import RichTextField
 from datetime import date
+from django.contrib.auth import get_user_model
 
 
 
@@ -211,7 +212,18 @@ class Vacancy(models.Model):
     def __str__(self):
         return f"{self.job_name} (Vacancy: {self.job_ref})"
 
-    
+def certificate_upload_to(instance, filename):
+    # Save the file with the user's full name
+    full_name = f"{instance.user.first_name}_{instance.user.last_name}"
+    return f"certificates/{full_name}/{filename}"
+
+
+class Document(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    certificate = models.FileField(upload_to=certificate_upload_to)
+
+    def __str__(self):
+        return self.certificate.name
 
 
 class JobApplication(models.Model):
@@ -219,19 +231,16 @@ class JobApplication(models.Model):
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
     application_date = models.DateTimeField(default=timezone.now)
     cover_letter = models.TextField()
-    cv = models.FileField(upload_to='cv/', null=True, blank=True)
     is_qualified = models.BooleanField(default=False)
+    documents = models.ManyToManyField(Document)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.vacancy.job_name} Application"
 
     
-class QualifiedApplicant(models.Model):
-    job_application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, primary_key=True)
-    applicant_name = models.CharField(max_length=100)
-    applied_vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
+class EmailTemplate(models.Model):
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
 
     def __str__(self):
-        return f"{self.applicant_name} - {self.applied_vacancy.job_name} (Qualified Applicant)"
-
-    
+        return self.subject

@@ -11,6 +11,7 @@ from django.utils.html import strip_tags
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django import forms
 
 
 
@@ -219,34 +220,25 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
 
     get_resume_details.short_description = 'Resume Details'
 
-    
+    class EmailForm(forms.Form):
+        template = forms.ModelChoiceField(queryset=EmailTemplate.objects.all())
     def send_email_to_applicants(self, request, queryset):
-        if request.method == 'POST':
-            subject = request.POST.get('subject')
-            message = request.POST.get('message')
+        for application in queryset:
+            from_email = 'admin@example.com'
+            to_email = [application.user.email]
 
-            if subject and message:
-                for application in queryset:
-                    to_email = [application.user.email]
+            # Customize the email subject and message for each applicant
+            subject = f'Regarding Your Job Application for {application.vacancy.job_name}'
+            message = f"Dear {application.user.get_full_name()}, we are happy to let you know that you qualified for the first phase of recruitment for the job you applied for: {application.vacancy.job_name}. Congratulations!!, We will let you know on the next process"
 
-                # Render the email template
-                    email_html = render_to_string('applicants/admin/email_template.html', {'message': message})
+            send_mail(subject, message, from_email, to_email)
 
-                # Create a plain text version of the email
-                    email_text = strip_tags(email_html)
-
-                # Send the email
-                    send_mail(subject, email_text, to_email, html_message=email_html)
-
-                self.message_user(request, 'Emails have been sent to selected applicants.')
-                return redirect('admin:applicants_jobapplication_changelist')
-
-            messages.error(request, 'Subject and message are required.')
-    
-        return render(request, 'admin/send_email_to_applicants.html')
+        self.message_user(request, 'Emails have been sent to selected applicants.')
 
     send_email_to_applicants.short_description = 'Send email to selected applicants'
+    actions = [send_email_to_applicants]
 
+    
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
@@ -263,9 +255,16 @@ class CustomUserAdmin(UserAdmin):
 
     full_name.short_description = 'Name'
 
+class EmailTemplateAdmin(admin.ModelAdmin):
+    list_display = ['subject']
+
+
+
+
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Vacancy)
 admin.site.register(AcademicDetails)
 admin.site.register(RelevantCourse)
 admin.site.register(JobApplication, JobApplicationAdmin)
+admin.site.register(EmailTemplate, EmailTemplateAdmin)
 

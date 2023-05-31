@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.forms.widgets import DateInput
 from django.forms import ModelForm, DateInput
 from .models import *
+from multiupload.fields import MultiFileField
 
 
 class UserRegisterForm(UserCreationForm):
@@ -192,25 +193,25 @@ class RefereeForm(forms.ModelForm):
         fields = ['name', 'organization', 'occupation', 'relationship_period', 'email', 'phone']
 
 class JobApplicationForm(forms.ModelForm):
+    additional_documents = MultiFileField(min_num=0, max_num=5, max_file_size=1024 * 1024 * 5, required=False)
+
     class Meta:
         model = JobApplication
-        fields = ['cover_letter', 'cv']
+        fields = ['cover_letter', 'additional_documents']
         
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(JobApplicationForm, self).__init__(*args, **kwargs)
-        if self.user:
-            self.fields['cv'].initial = self.user.resume.cv  # Set the initial value for the 'cv' field
-    
-    def save(self, commit=True):
-        instance = super(JobApplicationForm, self).save(commit=False)
-        if self.user:
-            instance.user = self.user
-            instance.resume = self.user.resume
-        if commit:
-            instance.save()
-        return instance
-    
+
+    def clean_additional_documents(self):
+        additional_documents = self.cleaned_data.get('additional_documents')
+        documents = []
+        if additional_documents:
+            for document in additional_documents:
+                doc = Document.objects.create(user=self.user, certificate=document)
+                documents.append(doc)
+        return documents
+
 class JobSearchForm(forms.Form):
     keywords = forms.CharField(max_length=100, required=False)
     area_of_study = forms.ModelChoiceField(queryset=AreaOfStudy.objects.all(), required=False)

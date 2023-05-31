@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
+from applicants.models import JobApplication
 
 
 def index(request):
@@ -146,3 +147,12 @@ class ResumeView(TemplateView):
             context['referees'] = referees
 
         return context
+    
+@login_required
+def application_status(request):
+    user = request.user
+    applications = JobApplication.objects.filter(user=user)
+    context = {
+        'applications': applications
+    }
+    return render(request, 'main/application_status.html', context)

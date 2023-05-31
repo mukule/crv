@@ -415,6 +415,10 @@ def save_resume(request):
     return redirect('index')
 
 
+from django.db import transaction
+from django.core.exceptions import ValidationError
+
+@transaction.atomic
 def apply_job(request, vacancy_id):
     vacancy = get_object_or_404(Vacancy, id=vacancy_id)
     user = request.user
@@ -440,13 +444,21 @@ def apply_job(request, vacancy_id):
         is_qualified = False
 
     if request.method == 'POST':
-        form = JobApplicationForm(request.POST, request.FILES)
+        form = JobApplicationForm(request.POST, request.FILES, user=user)
         if form.is_valid():
             application = form.save(commit=False)
             application.user = user
             application.vacancy = vacancy
-            application.is_qualified = is_qualified  # Set the qualification status
+            application.is_qualified = is_qualified
             application.save()
+
+            additional_documents = request.FILES.getlist('additional_documents')
+            for document in additional_documents:
+                document_instance = Document(user=user)
+                document_instance.certificate.save(document.name, document)
+                document_instance.save()
+
+                application.documents.add(document_instance)
 
             # Send email on successful application
             mail_subject = f"Application successful for {vacancy.job_name}"
@@ -458,6 +470,6 @@ def apply_job(request, vacancy_id):
             messages.success(request, "Job application submitted successfully.")
             return redirect('index')
     else:
-        form = JobApplicationForm()
+        form = JobApplicationForm(user=user)
 
     return render(request, 'applicants/job_application.html', {'form': form, 'vacancy': vacancy})

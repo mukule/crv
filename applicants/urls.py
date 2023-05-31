@@ -22,6 +22,7 @@ urlpatterns = [
     path('referee/', views.create_referee, name='referee'),
     path('save-resume/', views.save_resume, name='save_resume'),
     # path('applicants/resume/export/<int:resume_id>/', views.export_resume_to_excel, name='export_resume_to_excel'),
+    
 
     
 

@@ -10,5 +10,6 @@ urlpatterns = [
     path('internships/', views.internships, name='internships'),
     path('resume/', ResumeView.as_view(), name='resume'),
     path('internal-adverts/', views.internal_adverts, name='internal_adverts'),
+    path('application/status/', views.application_status, name='application_status'),
 
 ]
