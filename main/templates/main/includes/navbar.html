@@ -20,6 +20,9 @@
                         <a href="{% url 'internal_adverts' %}"><i class="menu-icon fa fa-user-md"></i>Internal adverts</a>
                     </li>
                     {% endif %}
+                    <li class="menu-item">
+                        <a href="{% url 'closed_vacancies' %}"><i class="menu-icon fa fa-user-md"></i>Closed Vacancies</a>
+                    </li>
             {% elif user.interest == 'I' %}
                 <li class="menu-item">
                     <a href="{% url 'internships' %}"><i class="menu-icon fa fa-bookmark-o"></i>Internships</a>
@@ -29,6 +32,9 @@
                         <a href="{% url 'internal_adverts' %}"><i class="menu-icon fa fa-user-md"></i>Internal adverts</a>
                     </li>
                     {% endif %}
+                    <li class="menu-item">
+                        <a href="{% url 'closed_vacancies' %}"><i class="menu-icon fa fa-user-md"></i>Closed Vacancies</a>
+                    </li>
             {% endif %}
                 <li class="menu-title">My Profile</li>
                 <li class="menu-item">
@@ -38,7 +44,7 @@
                     <a href="{% url 'academic_details'%}"><i class="menu-icon fa fa-book"></i>Education</a>
                 </li>
                 <li class="menu-item">
-                    <a href="{% url 'relevant_courses'%}"><i class="menu-icon fa fa-sitemap"></i>Other Relevant courses</a>
+                    <a href="{% url 'relevant_courses'%}"><i class="menu-icon fa fa-sitemap"></i>Other courses</a>
                 </li>
                 <li class="menu-item">
                     <a href="{% url 'employment_history'%}"><i class="menu-icon fa fa-tasks"></i>Employment History</a>
@@ -52,7 +58,7 @@
                 <li class="menu-item">
                     <a href="{% url 'resume'%}"><i class="menu-icon fa fa-envelope"></i>view Resume</a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item mb-4">
                     <a href="{% url 'application_status' %}"><i class="menu-icon fa fa-envelope"></i>Application Status</a>
                 </li>
                 {% else %}

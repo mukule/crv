@@ -11,5 +11,6 @@ urlpatterns = [
     path('resume/', ResumeView.as_view(), name='resume'),
     path('internal-adverts/', views.internal_adverts, name='internal_adverts'),
     path('application/status/', views.application_status, name='application_status'),
+    path('closed-vacancies/', views.closed_vacancies, name='closed_vacancies'),
 
 ]

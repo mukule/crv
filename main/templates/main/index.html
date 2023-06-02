@@ -67,15 +67,18 @@
                                 <td data-label="Number of Vacancies">{{ vacancy.number_of_vacancies }}</td>
                                 <td data-label="Date Open">{{ vacancy.date_open }}</td>
                                 <td data-label="Close Date">{{ vacancy.date_closed }}</td>
-                                <td data-label="Action"><a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" href="{% url 'job_detail' vacancy.id %}">Job details</a></td>
+                                <td data-label="Action">
+                                    <a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" href="{% url 'job_detail' vacancy.id %}">Job details</a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         {% else %}
-            <p>No Job vacancies available for Now</p>
+            <p>No job vacancies available for now</p>
         {% endif %}
     </div>
+    
   </div>
 {% endblock content %}

@@ -11,11 +11,13 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from applicants.models import JobApplication
+from django.core.paginator import Paginator
 
 
 def index(request):
     current_date = timezone.now().date()
     all_employment_vacancies = Vacancy.objects.filter(vacancy_type__name='Employment', date_open__lte=current_date, date_closed__gte=current_date)
+    # closed_vacancies = Vacancy.objects.filter(vacancy_type__name='Employment', date_closed__lt=current_date)
     form = JobSearchForm()
     
     if request.method == 'GET' and 'search' in request.GET:
@@ -27,18 +29,14 @@ def index(request):
             specialization = form.cleaned_data['specialization']
             department = form.cleaned_data['department']
             vacancy_type = form.cleaned_data['vacancy_type']
-            
-            print(area_of_study)
-            print(all_employment_vacancies)
             # Apply the search filters on the all_employment_vacancies queryset
             employment_vacancies = all_employment_vacancies.filter(
-            Q(job_name__icontains=keywords) |
-            Q(area_of_study=area_of_study) |
-            Q(specialization=specialization) |
-            Q(department__icontains=department) |
-            Q(vacancy_type=vacancy_type)
+                Q(job_name__icontains=keywords) |
+                Q(area_of_study=area_of_study) |
+                Q(specialization=specialization) |
+                Q(department__icontains=department) |
+                Q(vacancy_type=vacancy_type)
             )
-            print("fltered employemnt Vacancy",employment_vacancies)
             
             if not employment_vacancies.exists():
                 # If no job matches the search criteria, display a message
@@ -48,6 +46,7 @@ def index(request):
         employment_vacancies = all_employment_vacancies
     
     return render(request, 'main/index.html', {'form': form, 'vacancies': employment_vacancies})
+
 
 
 
@@ -123,6 +122,15 @@ def internal_adverts(request):
 
     return render(request, 'main/internal_adverts.html', {'form': form, 'vacancies': internal_vacancies})
 
+def closed_vacancies(request):
+    closed_vacancies = Vacancy.objects.filter(date_closed__isnull=False)
+    
+    paginator = Paginator(closed_vacancies, 5)  # Display 5 vacancies per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'main/closed_vacancies.html', {'page_obj': page_obj})
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -156,3 +164,5 @@ def application_status(request):
         'applications': applications
     }
     return render(request, 'main/application_status.html', context)
+
+

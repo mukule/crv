@@ -208,7 +208,11 @@ class JobApplicationForm(forms.ModelForm):
         documents = []
         if additional_documents:
             for document in additional_documents:
-                doc = Document.objects.create(user=self.user, certificate=document)
+                doc = Document(user=self.user)
+                timestamp = str(int(time.time()))
+                filename = f"{self.user.username}_{timestamp}_{os.path.basename(document.name)}"
+                doc.certificate.save(filename, document, save=False)
+                doc.save()
                 documents.append(doc)
         return documents
 

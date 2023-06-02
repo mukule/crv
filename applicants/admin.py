@@ -194,7 +194,7 @@ class JobApplicationResource(resources.ModelResource):
 
 class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = JobApplicationResource
-    list_display = ('get_user_full_name', 'get_vacancy_name', 'application_date', 'get_is_qualified', 'get_resume_details')
+    list_display = ('get_user_full_name', 'get_vacancy_name', 'application_date', 'get_is_qualified', 'get_resume_details',)
     list_filter = ('application_date', 'vacancy__job_name', 'is_qualified')
     actions = ['send_email_to_applicants']
 
@@ -220,8 +220,12 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
 
     get_resume_details.short_description = 'Resume Details'
 
+    
+        
+
     class EmailForm(forms.Form):
         template = forms.ModelChoiceField(queryset=EmailTemplate.objects.all())
+
     def send_email_to_applicants(self, request, queryset):
         for application in queryset:
             from_email = 'admin@example.com'
@@ -237,6 +241,7 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
 
     send_email_to_applicants.short_description = 'Send email to selected applicants'
     actions = [send_email_to_applicants]
+
 
     
 class CustomUserAdmin(UserAdmin):

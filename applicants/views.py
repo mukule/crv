@@ -19,6 +19,7 @@ from django.db.models.query_utils import Q
 from .models import *
 from django.contrib.auth import get_user_model
 from django.views import View
+import time
 User = get_user_model()
 
 
@@ -372,7 +373,6 @@ def create_referee(request):
             return redirect('referee')
     else:
         form = RefereeForm()
-
     referees = Referee.objects.filter(user=user)  # Retrieve referee objects for the current user
 
     context = {
@@ -381,6 +381,25 @@ def create_referee(request):
     }
 
     return render(request, 'applicants/referee.html', context)
+
+def update_referee(request, referee_id):
+    referee = get_object_or_404(Referee, id=referee_id)
+
+    if request.method == 'POST':
+        form = RefereeForm(request.POST, instance=referee)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Referee updated successfully.')
+            return redirect('referee')
+    else:
+        form = RefereeForm(instance=referee)
+
+    context = {
+        'form': form,
+        'referee': referee
+    }
+
+    return render(request, 'applicants/update_referee.html', context)
 
 def save_resume(request):
     # Retrieve relevant data from other models
@@ -451,14 +470,6 @@ def apply_job(request, vacancy_id):
             application.vacancy = vacancy
             application.is_qualified = is_qualified
             application.save()
-
-            additional_documents = request.FILES.getlist('additional_documents')
-            for document in additional_documents:
-                document_instance = Document(user=user)
-                document_instance.certificate.save(document.name, document)
-                document_instance.save()
-
-                application.documents.add(document_instance)
 
             # Send email on successful application
             mail_subject = f"Application successful for {vacancy.job_name}"

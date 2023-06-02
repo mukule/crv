@@ -31,8 +31,7 @@
                             <th data-label="Job Name">Job Name</th>
                             <th data-label="Application Date">Application Date</th>
                             <th data-label="Cover Letter">Cover Letter</th>
-                            <th data-label="CV">CV</th>
-                            <th data-label="Qualified">Qualified</th>
+                            <th data-label="Job Status">Job Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,22 +40,28 @@
                                 <td data-label="Job Name">{{ application.vacancy.job_name }}</td>
                                 <td data-label="Application Date">{{ application.application_date }}</td>
                                 <td data-label="Cover Letter">{{ application.cover_letter }}</td>
-                                <td data-label="Documents">
-                                    <a href="{{ document.certificate.url }}">Download Document</a>
+                                <td data-label="Job Status">
+                                    {% if application.is_vacancy_open %}
+                                        Application is still on
+                                    {% elif application.vacancy.is_filled %}
+                                        Position filled
+                                    {% else %}
+                                        Processing in progress
+                                    {% endif %}
                                 </td>
                                 
-                                <td data-label="Qualified">{{ application.is_qualified }}</td>
+                                
+                                
                             </tr>
                         {% endfor %}
                     </tbody>
-                    
-                    
                 </table>
             </div>
         {% else %}
             <p>No applications found.</p>
         {% endif %}
     </div>
+    
     
   </div>
 {% endblock %}

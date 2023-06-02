@@ -11,7 +11,7 @@
                         <img src="{% static 'main/images/banner.png' %}" alt="Image description" class="img-fluid" style="border-radius: 10px;">
                         <div class="image-overlay d-flex justify-content-center align-items-center d-none d-md-flex">
                             <div class="image-text">
-                                <h5>Have someone to back you up ?</h5>
+                                <h5>update work experience</h5>
                             </div>
                         </div>
                     </div>
@@ -19,8 +19,7 @@
             </div>
         </div>
     </div>
-
-    <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style">
+    <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style" style="min-height:65vh;">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
                 <fieldset class="form-group">
@@ -49,48 +48,11 @@
                 </fieldset>
                 <div class="form-row text-center">
                     <div class="form-group col-md-12 mb-0">
-                        <button style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" type="submit">Add Referee</button>
+                        <button style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" type="submit">Upate referee Details</button>
                     </div>
                 </div>
                 
         </form>
     </div>
-    <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style">
-        <div class="table-responsive">
-            <table class="table table-striped table-vertical">
-                <thead>
-                    <tr>
-                        <th data-label="Full Name">Full Name</th>
-                        <th data-label="Occupation">Occupation</th>
-                        <th data-label="Organization">Organization</th>
-                        <th data-label="Relationship Period">Relationship Period</th>
-                        <th data-label="Email">Email</th>
-                        <th data-label="Phone">Phone</th>
-                        <th data-label="Action">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for referee in referee %}
-                        <tr>
-                            <td data-label="Full Name">{{ referee.name }}</td>
-                            <td data-label="Occupation">{{ referee.occupation }}</td>
-                            <td data-label="Organization">{{ referee.organization }}</td>
-                            <td data-label="Relationship Period">{{ referee.relationship_period }}</td>
-                            <td data-label="Email">{{ referee.email }}</td>
-                            <td data-label="Phone">{{ referee.phone }}</td>
-                            <td data-label="Action">
-                                <a style="background-color: #89c73e; border: #89c73e;" href="{% url 'update_referee' referee.id %}" class="btn btn-success">Update</a>
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="7">No referee details found.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
 </div>
 {% endblock content %}

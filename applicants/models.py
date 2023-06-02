@@ -6,6 +6,7 @@ from django.utils import timezone
 from ckeditor.fields import RichTextField
 from datetime import date
 from django.contrib.auth import get_user_model
+import time
 
 
 
@@ -208,15 +209,22 @@ class Vacancy(models.Model):
     date_created = models.DateField(auto_now_add=True)
     date_open = models.DateField()
     date_closed = models.DateField(null=True, blank=True)
+    is_filled = models.BooleanField(default=False)  # New boolean field
 
     def __str__(self):
         return f"{self.job_name} (Vacancy: {self.job_ref})"
+
 
 def certificate_upload_to(instance, filename):
     # Save the file with the user's full name
     full_name = f"{instance.user.first_name}_{instance.user.last_name}"
     return f"certificates/{full_name}/{filename}"
 
+
+def certificate_upload_to(instance, filename):
+    # Save the file with the user's full name
+    full_name = f"{instance.user.first_name}_{instance.user.last_name}"
+    return f"certificates/{full_name}/{filename}"
 
 class Document(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -225,6 +233,14 @@ class Document(models.Model):
     def __str__(self):
         return self.certificate.name
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # Generate a unique filename based on user and timestamp
+            timestamp = str(int(time.time()))
+            filename = f"{self.user.username}_{timestamp}_{os.path.basename(self.certificate.name)}"
+            self.certificate.name = filename
+
+        return super().save(*args, **kwargs)
 
 class JobApplication(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -236,6 +252,14 @@ class JobApplication(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.vacancy.job_name} Application"
+    
+    def delete(self, using=None, keep_parents=False):
+        # Delete associated documents
+        self.documents.all().delete()
+        super().delete(using, keep_parents)
+    
+    def is_vacancy_open(self):
+        return self.vacancy.date_closed is None or self.vacancy.date_closed > timezone.now().date()
 
     
 class EmailTemplate(models.Model):

@@ -21,6 +21,7 @@ urlpatterns = [
     path('employment_history/update/<int:employment_history_id>/', views.update_employment_history, name='update_employment_history'),
     path('referee/', views.create_referee, name='referee'),
     path('save-resume/', views.save_resume, name='save_resume'),
+    path('referee/update/<int:referee_id>/', views.update_referee, name='update_referee'),
     # path('applicants/resume/export/<int:resume_id>/', views.export_resume_to_excel, name='export_resume_to_excel'),
     
 
