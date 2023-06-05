@@ -14,6 +14,11 @@ from applicants.models import JobApplication
 from django.core.paginator import Paginator
 
 
+
+def home(request):
+    return render(request, 'main/home.html')
+
+
 def index(request):
     current_date = timezone.now().date()
     all_employment_vacancies = Vacancy.objects.filter(vacancy_type__name='Employment', date_open__lte=current_date, date_closed__gte=current_date)
