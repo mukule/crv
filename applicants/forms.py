@@ -220,5 +220,4 @@ class JobSearchForm(forms.Form):
     keywords = forms.CharField(max_length=100, required=False)
     area_of_study = forms.ModelChoiceField(queryset=AreaOfStudy.objects.all(), required=False)
     specialization = forms.ModelChoiceField(queryset=Specialization.objects.all(), required=False)
-    department = forms.CharField(max_length=100, required=False)
     vacancy_type = forms.ModelChoiceField(queryset=VacancyType.objects.all(), required=False)

@@ -27,14 +27,12 @@ def index(request):
             keywords = form.cleaned_data['keywords']
             area_of_study = form.cleaned_data['area_of_study']
             specialization = form.cleaned_data['specialization']
-            department = form.cleaned_data['department']
             vacancy_type = form.cleaned_data['vacancy_type']
             # Apply the search filters on the all_employment_vacancies queryset
             employment_vacancies = all_employment_vacancies.filter(
                 Q(job_name__icontains=keywords) |
                 Q(area_of_study=area_of_study) |
                 Q(specialization=specialization) |
-                Q(department__icontains=department) |
                 Q(vacancy_type=vacancy_type)
             )
             
@@ -68,7 +66,6 @@ def internships(request):
             keywords = form.cleaned_data['keywords']
             area_of_study = form.cleaned_data['area_of_study']
             specialization = form.cleaned_data['specialization']
-            department = form.cleaned_data['department']
             vacancy_type = form.cleaned_data['vacancy_type']
             
             # Apply the search filters on the all_internship_vacancies queryset
@@ -76,7 +73,6 @@ def internships(request):
                 Q(job_name__icontains=keywords) |
                 Q(area_of_study=area_of_study) |
                 Q(specialization=specialization) |
-                Q(department__icontains=department) |
                 Q(vacancy_type=vacancy_type)
             )
             
