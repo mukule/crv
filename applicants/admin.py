@@ -12,6 +12,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django import forms
+from django.utils.safestring import mark_safe
 
 
 
@@ -263,6 +264,9 @@ class CustomUserAdmin(UserAdmin):
 class EmailTemplateAdmin(admin.ModelAdmin):
     list_display = ['subject']
 
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'document')
 
 
 

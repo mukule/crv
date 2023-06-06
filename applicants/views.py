@@ -433,10 +433,26 @@ def save_resume(request):
     messages.success(request, 'Your Resume Submitted successfully.')
     return redirect('index')
 
+def upload_document(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            documents = []
+            for file in request.FILES.getlist('documents'):
+                document = Document(user=request.user, document=file)
+                document.save()
+                documents.append(document)
+            return redirect('vacancy')  # Redirect to the document list view after successful upload
+    else:
+        form = DocumentForm()
+
+    return render(request, 'main/upload_document.html', {'form': form})
+
 
 from django.db import transaction
 from django.core.exceptions import ValidationError
 
+@login_required
 @transaction.atomic
 def apply_job(request, vacancy_id):
     vacancy = get_object_or_404(Vacancy, id=vacancy_id)
@@ -446,21 +462,7 @@ def apply_job(request, vacancy_id):
         messages.error(request, "You have already applied for this job.")
         return redirect('index')
 
-    # Check if the applicant meets the qualifications
-    academic_details = AcademicDetails.objects.filter(user=user).first()
-    if academic_details:
-        academic_level = academic_details.academic_level
-        specialization = academic_details.specialization
-        area_of_study = academic_details.area_of_study
-    else:
-        academic_level = None
-        specialization = None
-        area_of_study = None
-
-    if academic_level == vacancy.academic_level and specialization == vacancy.specialization and area_of_study == vacancy.area_of_study:
-        is_qualified = True
-    else:
-        is_qualified = False
+    is_qualified = check_qualifications(user, vacancy)
 
     if request.method == 'POST':
         form = JobApplicationForm(request.POST, request.FILES, user=user)
@@ -474,7 +476,7 @@ def apply_job(request, vacancy_id):
             # Send email on successful application
             mail_subject = f"Application successful for {vacancy.job_name}"
             message = f"Thank you for showing interest in joining our organization. We will review your application and notify you of the status."
-            to_email = request.user.email
+            to_email = user.email
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
 
@@ -484,3 +486,20 @@ def apply_job(request, vacancy_id):
         form = JobApplicationForm(user=user)
 
     return render(request, 'applicants/job_application.html', {'form': form, 'vacancy': vacancy})
+
+def check_qualifications(user, vacancy):
+    academic_details = AcademicDetails.objects.filter(user=user).first()
+    if academic_details:
+        academic_level = academic_details.academic_level
+        specialization = academic_details.specialization
+        area_of_study = academic_details.area_of_study
+    else:
+        academic_level = None
+        specialization = None
+        area_of_study = None
+
+    return (
+        academic_level == vacancy.academic_level
+        and specialization == vacancy.specialization
+        and area_of_study == vacancy.area_of_study
+    )

@@ -10,6 +10,7 @@ from .models import *
 from multiupload.fields import MultiFileField
 
 
+
 class UserRegisterForm(UserCreationForm):
     username = forms.CharField(
         max_length=30,
@@ -192,33 +193,28 @@ class RefereeForm(forms.ModelForm):
         model = Referee
         fields = ['name', 'organization', 'occupation', 'relationship_period', 'email', 'phone']
 
+
 class JobApplicationForm(forms.ModelForm):
-    additional_documents = MultiFileField(min_num=0, max_num=5, max_file_size=1024 * 1024 * 5, required=False)
+    cover_letter = forms.CharField(widget=forms.Textarea)
 
     class Meta:
         model = JobApplication
-        fields = ['cover_letter', 'additional_documents']
+        fields = ['cover_letter']
         
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(JobApplicationForm, self).__init__(*args, **kwargs)
 
-    def clean_additional_documents(self):
-        additional_documents = self.cleaned_data.get('additional_documents')
-        documents = []
-        if additional_documents:
-            for document in additional_documents:
-                doc = Document(user=self.user)
-                timestamp = str(int(time.time()))
-                filename = f"{self.user.username}_{timestamp}_{os.path.basename(document.name)}"
-                doc.certificate.save(filename, document, save=False)
-                doc.save()
-                documents.append(doc)
-        return documents
+class DocumentForm(forms.ModelForm):
+    documents = MultiFileField(min_num=1, max_num=5, max_file_size=1024 * 1024 * 5)
+
+    class Meta:
+        model = Document
+        fields = ['documents']
 
 class JobSearchForm(forms.Form):
     keywords = forms.CharField(max_length=100, required=False)
     area_of_study = forms.ModelChoiceField(queryset=AreaOfStudy.objects.all(), required=False)
     specialization = forms.ModelChoiceField(queryset=Specialization.objects.all(), required=False)
-    department = forms.CharField(max_length=100, required=False)
     vacancy_type = forms.ModelChoiceField(queryset=VacancyType.objects.all(), required=False)
+

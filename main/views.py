@@ -14,7 +14,12 @@ from applicants.models import JobApplication
 from django.core.paginator import Paginator
 
 
-def index(request):
+
+def home(request):
+    return render(request, 'main/home.html')
+
+
+def vacancy(request):
     current_date = timezone.now().date()
     all_employment_vacancies = Vacancy.objects.filter(vacancy_type__name='Employment', date_open__lte=current_date, date_closed__gte=current_date)
     # closed_vacancies = Vacancy.objects.filter(vacancy_type__name='Employment', date_closed__lt=current_date)
@@ -27,14 +32,12 @@ def index(request):
             keywords = form.cleaned_data['keywords']
             area_of_study = form.cleaned_data['area_of_study']
             specialization = form.cleaned_data['specialization']
-            department = form.cleaned_data['department']
             vacancy_type = form.cleaned_data['vacancy_type']
             # Apply the search filters on the all_employment_vacancies queryset
             employment_vacancies = all_employment_vacancies.filter(
                 Q(job_name__icontains=keywords) |
                 Q(area_of_study=area_of_study) |
                 Q(specialization=specialization) |
-                Q(department__icontains=department) |
                 Q(vacancy_type=vacancy_type)
             )
             
@@ -45,7 +48,7 @@ def index(request):
     else:
         employment_vacancies = all_employment_vacancies
     
-    return render(request, 'main/index.html', {'form': form, 'vacancies': employment_vacancies})
+    return render(request, 'main/vacancy.html', {'form': form, 'vacancies': employment_vacancies})
 
 
 
@@ -68,7 +71,6 @@ def internships(request):
             keywords = form.cleaned_data['keywords']
             area_of_study = form.cleaned_data['area_of_study']
             specialization = form.cleaned_data['specialization']
-            department = form.cleaned_data['department']
             vacancy_type = form.cleaned_data['vacancy_type']
             
             # Apply the search filters on the all_internship_vacancies queryset
@@ -76,7 +78,6 @@ def internships(request):
                 Q(job_name__icontains=keywords) |
                 Q(area_of_study=area_of_study) |
                 Q(specialization=specialization) |
-                Q(department__icontains=department) |
                 Q(vacancy_type=vacancy_type)
             )
             
@@ -101,7 +102,6 @@ def internal_adverts(request):
             keywords = form.cleaned_data['keywords']
             area_of_study = form.cleaned_data['area_of_study']
             specialization = form.cleaned_data['specialization']
-            department = form.cleaned_data['department']
             vacancy_type = form.cleaned_data['vacancy_type']
 
             # Apply the search filters on the all_internal_vacancies queryset
@@ -109,7 +109,6 @@ def internal_adverts(request):
                 Q(job_name__icontains=keywords) |
                 Q(area_of_study=area_of_study) |
                 Q(specialization=specialization) |
-                Q(department__icontains=department) |
                 Q(vacancy_type=vacancy_type)
             )
 
