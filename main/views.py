@@ -19,7 +19,7 @@ def home(request):
     return render(request, 'main/home.html')
 
 
-def index(request):
+def vacancy(request):
     current_date = timezone.now().date()
     all_employment_vacancies = Vacancy.objects.filter(vacancy_type__name='Employment', date_open__lte=current_date, date_closed__gte=current_date)
     # closed_vacancies = Vacancy.objects.filter(vacancy_type__name='Employment', date_closed__lt=current_date)
@@ -48,7 +48,7 @@ def index(request):
     else:
         employment_vacancies = all_employment_vacancies
     
-    return render(request, 'main/index.html', {'form': form, 'vacancies': employment_vacancies})
+    return render(request, 'main/vacancy.html', {'form': form, 'vacancies': employment_vacancies})
 
 
 

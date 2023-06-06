@@ -6,7 +6,7 @@ from .views import ResumeView
 urlpatterns = [
 
     path("", views.home, name="home"),
-    path("index", views.index, name="index"),
+    path("vacancy", views.vacancy, name="vacancy"),
     path('vacancy/<int:vacancy_id>/', views.vacancy_detail, name='job_detail'),
     path('apply_job/<int:vacancy_id>/', apply_job, name='apply_job'),
     path('internships/', views.internships, name='internships'),

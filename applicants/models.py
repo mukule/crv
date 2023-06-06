@@ -228,19 +228,20 @@ def certificate_upload_to(instance, filename):
 
 class Document(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    certificate = models.FileField(upload_to=certificate_upload_to)
+    document = models.FileField(upload_to=certificate_upload_to)
 
     def __str__(self):
-        return self.certificate.name
+        return self.document.name
 
     def save(self, *args, **kwargs):
         if not self.pk:
             # Generate a unique filename based on user and timestamp
             timestamp = str(int(time.time()))
-            filename = f"{self.user.username}_{timestamp}_{os.path.basename(self.certificate.name)}"
-            self.certificate.name = filename
+            filename = f"{self.user.username}_{timestamp}_{os.path.basename(self.document.name)}"
+            self.document.name = filename
 
         return super().save(*args, **kwargs)
+
 
 class JobApplication(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -248,16 +249,15 @@ class JobApplication(models.Model):
     application_date = models.DateTimeField(default=timezone.now)
     cover_letter = models.TextField()
     is_qualified = models.BooleanField(default=False)
-    documents = models.ManyToManyField(Document)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.vacancy.job_name} Application"
-    
+
     def delete(self, using=None, keep_parents=False):
         # Delete associated documents
-        self.documents.all().delete()
+        self.user.documents.all().delete()
         super().delete(using, keep_parents)
-    
+
     def is_vacancy_open(self):
         return self.vacancy.date_closed is None or self.vacancy.date_closed > timezone.now().date()
 

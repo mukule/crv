@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'main',
     'import_export',
     'ckeditor',
+    'multiupload',
 ]
 
 MIDDLEWARE = [
