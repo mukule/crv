@@ -122,7 +122,8 @@ def internal_adverts(request):
     return render(request, 'main/internal_adverts.html', {'form': form, 'vacancies': internal_vacancies})
 
 def closed_vacancies(request):
-    closed_vacancies = Vacancy.objects.filter(date_closed__isnull=False)
+    current_date = timezone.now().date()
+    closed_vacancies = Vacancy.objects.filter(date_closed__lt=current_date)
     
     paginator = Paginator(closed_vacancies, 5)  # Display 5 vacancies per page
     page_number = request.GET.get('page')
