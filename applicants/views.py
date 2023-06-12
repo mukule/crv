@@ -430,7 +430,7 @@ def save_resume(request):
 
     # Save the resume instance
     resume.save()
-    messages.success(request, 'Your Resume Submitted successfully.')
+    messages.success(request, 'Resume submitted succesfully, Check available opportunities and Apply.')
     return redirect('index')
 
 def upload_document(request):
@@ -442,11 +442,26 @@ def upload_document(request):
                 document = Document(user=request.user, document=file)
                 document.save()
                 documents.append(document)
-            return redirect('vacancy')  # Redirect to the document list view after successful upload
+            messages.success(request, 'Documents uploaded successfully.')
+            return redirect('upload_document')  # Redirect to the document list view after successful upload
+        else:
+            error_message = 'Error uploading documents. Please check the following errors:'
+            for field, errors in form.errors.items():
+                error_message += f'\n{field}: {", ".join(errors)}'
+            messages.error(request, error_message)
     else:
         form = DocumentForm()
 
-    return render(request, 'main/upload_document.html', {'form': form})
+    # Retrieve documents for the logged-in user
+    user_documents = Document.objects.filter(user=request.user)
+
+    return render(request, 'main/upload_document.html', {'form': form, 'user_documents': user_documents})
+
+def delete_document(request, document_id):
+    document = Document.objects.get(id=document_id)
+    document.delete()
+    messages.success(request, 'Document deleted successfully.')
+    return redirect('upload_document')
 
 
 from django.db import transaction
