@@ -266,8 +266,12 @@ class EmailTemplateAdmin(admin.ModelAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'document')
+    list_display = ('get_user_full_name', 'document')
+    list_filter = ('user__username',)
 
+    def get_user_full_name(self, obj):
+        return obj.user.get_full_name()
+    get_user_full_name.short_description = 'User Full Name'  
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
