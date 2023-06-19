@@ -31,9 +31,25 @@
           {% endif %}
         {% endfor %}
         
-        <input type="submit" value="Submit" name="submit">
-      </form>
-      
-      
+        <input type="submit" style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" value="Submit">
+    </form>
+    
+    <!-- Display uploaded documents for the user -->
+    {% if user_documents %}
+      <div class="card my-4 px-4 py-3">
+        <h3 class="text-center">My Documents</h3>
+        <ul class="list-group border-0">
+          {% for document in user_documents %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <a href="{{ document.document.url }}">{{ document.document.name }}</a>
+              <form action="{% url 'delete_document' document.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
   </div>
 {% endblock content %}

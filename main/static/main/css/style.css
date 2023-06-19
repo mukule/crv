@@ -2616,3 +2616,6 @@ margin-top: 60px;
      /* Change the color to match your background color */
      -webkit-text-fill-color: #89c73e !important
  }
+ .small-device {
+  animation: none !important; /* or override with a different animation if needed */
+}

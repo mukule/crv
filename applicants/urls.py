@@ -23,7 +23,7 @@ urlpatterns = [
     path('save-resume/', views.save_resume, name='save_resume'),
     path('referee/update/<int:referee_id>/', views.update_referee, name='update_referee'),
     path('upload-document/', views.upload_document, name='upload_document'),
-    # path('applicants/resume/export/<int:resume_id>/', views.export_resume_to_excel, name='export_resume_to_excel'),
+    path('delete_document/<int:document_id>/', views.delete_document, name='delete_document'),
     
 
     
