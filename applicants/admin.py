@@ -195,7 +195,7 @@ class JobApplicationResource(resources.ModelResource):
 
 class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = JobApplicationResource
-    list_display = ('get_user_full_name', 'get_vacancy_name', 'application_date', 'get_is_qualified', 'get_resume_details',)
+    list_display = ('get_user_full_name', 'get_vacancy_name', 'application_date', 'get_criteria', 'get_is_qualified', 'get_resume_details',)
     list_filter = ('application_date', 'vacancy__job_name', 'is_qualified')
     actions = ['send_email_to_applicants']
 
@@ -220,6 +220,12 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
         return format_html('<a href="{}">{}</a>', resume_link, 'View Resume')
 
     get_resume_details.short_description = 'Resume Details'
+
+    def get_criteria(self, obj):
+        criteria = f"Academic Level: {obj.vacancy.academic_level}, Specialization: {obj.vacancy.specialization}, Area of Study: {obj.vacancy.area_of_study}"
+        return criteria
+    
+    get_criteria.short_description = 'Requirements'
 
     
         

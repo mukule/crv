@@ -34,6 +34,12 @@ class CustomUser(AbstractUser):
     is_organization_staff = models.BooleanField(default=False)
     marital_status = models.CharField(max_length=1, choices=MARITAL_STATUS_CHOICES, blank=True)
     postal_address = models.CharField(max_length=255, blank=True)
+    DISABILITY_CHOICES = (
+        ('Y', 'Yes'),
+        ('N', 'No'),
+    )
+    is_person_with_disability = models.CharField(max_length=1, choices=DISABILITY_CHOICES, blank=True)
+    pwd_no = models.CharField(max_length=255, blank=True)
     
 
     def image_upload_to(self, instance=None):

@@ -11,6 +11,7 @@ from multiupload.fields import MultiFileField
 
 
 
+
 class UserRegisterForm(UserCreationForm):
     username = forms.CharField(
         max_length=30,
@@ -52,18 +53,36 @@ class UserRegisterForm(UserCreationForm):
         required=True,
     )
 
+    DISABILITY_CHOICES = (
+        ('Y', 'Yes'),
+        ('N', 'No'),
+    )
+    is_person_with_disability = forms.ChoiceField(
+        choices=DISABILITY_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Are you a person with a disability?'}),
+        label='',
+        required=False,
+    )
+    pwd_no = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={'placeholder': 'PWD Number', 'class': 'form-control'}),
+        label='',
+        required=False,
+    )
+
     class Meta:
         model = get_user_model()
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'interest']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'interest', 'is_person_with_disability', 'pwd_no']
 
     def save(self, commit=True):
         user = super(UserRegisterForm, self).save(commit=False)
         user.email = self.cleaned_data['email']
         user.interest = self.cleaned_data['interest']
+        user.is_person_with_disability = self.cleaned_data['is_person_with_disability']
+        user.pwd_no = self.cleaned_data['pwd_no']
         if commit:
             user.save()
         return user
-
 
 
 

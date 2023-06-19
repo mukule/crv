@@ -1,62 +1,114 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+
 {% block content %}
 <div class="content">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <div class="card" style="max-width: 400px; width: 100%;">
-                    <div class="card-body card-block text-center">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <fieldset class="form-group">
-                                <legend class="border-bottom mb-4">Sign Up</legend>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg text-center" id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" placeholder="Enter your ID Number" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg text-center" id="{{ form.first_name.id_for_label }}" name="{{ form.first_name.html_name }}" placeholder="Enter your first name" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg text-center" id="{{ form.last_name.id_for_label }}" name="{{ form.last_name.html_name }}" placeholder="Enter your last name" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-lg text-center" id="{{ form.email.id_for_label }}" name="{{ form.email.html_name }}" placeholder="Enter your email" required>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        <select class="form-control form-control-lg text-center" id="{{ form.interest.id_for_label }}" name="{{ form.interest.html_name }}" required>
-                                            <option value="" selected disabled hidden class="text-danger">You are interested in :</option>
-                                            {% for value, label in form.interest.field.choices %}
-                                                <option value="{{ value }}">{{ label }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg text-center" id="{{ form.password1.id_for_label }}" name="{{ form.password1.html_name }}" placeholder="Enter your password" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg text-center" id="{{ form.password2.id_for_label }}" name="{{ form.password2.html_name }}" placeholder="Confirm your password" required>
-                                </div>
-                            </fieldset>
-                            <button class="btn btn-success mb-4 custom-button" type="submit" style="background-color: #89c73e; color: #ffffff; border:0; border-radius: 20px; height: 50px; width: 50%;">Sign Up</button>
-                        </form>
-                        
-                        
-                        <div class="border-top pt-3">
-                            <small class="text-muted">
-                                Already Have An Account? <a class="ml-2" href="/login">Sign In</a>
-                            </small>
+    <div class="content-section col-lg-12 col-md-12 col-sm-12">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <div style="text-align: center;">
+                    <legend class="border-bottom mb-4">Sign Up</legend>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control form-control-lg text-center" id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" placeholder="Enter your ID Number" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="email" class="form-control form-control-lg text-center" id="{{ form.email.id_for_label }}" name="{{ form.email.html_name }}" placeholder="Enter your email" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control form-control-lg text-center" id="{{ form.first_name.id_for_label }}" name="{{ form.first_name.html_name }}" placeholder="Enter your first name" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control form-control-lg text-center" id="{{ form.last_name.id_for_label }}" name="{{ form.last_name.html_name }}" placeholder="Enter your last name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div class="form-group">
+                            <select class="form-control form-control-lg text-center" id="{{ form.interest.id_for_label }}" name="{{ form.interest.html_name }}" required>
+                                <option value="" selected disabled hidden class="text-danger">You are interested in:</option>
+                                {% for value, label in form.interest.field.choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="form-group">
+                            <select class="form-control form-control-lg text-center" id="{{ form.is_person_with_disability.id_for_label }}" name="{{ form.is_person_with_disability.html_name }}" required>
+                                <option value="" selected disabled hidden class="text-danger">Are you a person with a disability?</option>
+                                {% for value, label in form.is_person_with_disability.field.choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <input type="text" class="form-control form-control-lg text-center" id="{{ form.pwd_no.id_for_label }}" name="{{ form.pwd_no.html_name }}" placeholder="PWD Number">
+                    </div>
+                </div>   
+               <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="input-group">
+                        <input type="password" class="form-control form-control-lg text-center" id="{{ form.password1.id_for_label }}" name="{{ form.password1.html_name }}" placeholder="Enter your password" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text toggle-password" style="cursor: pointer;">
+                                <i class="fa fa-eye"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
+                <div class="form-group col-md-6">
+                    <div class="input-group">
+                        <input type="password" class="form-control form-control-lg text-center" id="{{ form.password2.id_for_label }}" name="{{ form.password2.html_name }}" placeholder="Confirm your password" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text toggle-password" style="cursor: pointer; border-radius: 10;">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+               </div>
+            </fieldset>
+            <div style="display: flex; justify-content: center;">
+                <button class="btn btn-success mb-4 custom-button" type="submit" style="background-color: #89c73e; color: #ffffff; border: 0; border-radius: 20px; height: 50px; width: 50%;">Sign Up</button>
             </div>
+            
+        </form>
+        <div class="border-top pt-3" style="text-align: center;">
+            <small class="text-muted">
+                Already Have An Account? <a class="ml-2" href="/login">Sign In</a>
+            </small>
         </div>
+        
     </div>
-    
-    
 </div>
+
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.querySelectorAll('.toggle-password');
+        const passwordInputs = document.querySelectorAll('input[type="password"]');
+        
+        togglePassword.forEach(function(toggle) {
+            toggle.addEventListener('click', function() {
+                passwordInputs.forEach(function(input) {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        toggle.innerHTML = '<i class="fa fa-eye-slash"></i>';
+                    } else {
+                        input.type = 'password';
+                        toggle.innerHTML = '<i class="fa fa-eye"></i>';
+                    }
+                });
+            });
+        });
+    });
+</script>
 {% endblock content %}

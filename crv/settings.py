@@ -134,13 +134,13 @@ MEDIA_URL = '/media/'
 
 # Emailing settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_FROM = 'nelson.masibo.kenyaweb.com'
-EMAIL_HOST_USER = 'kushdinesh98@gmail.com'
-EMAIL_HOST_PASSWORD = 'gskfoyoeojmrgsrk'
-EMAIL_PORT = 587
+EMAIL_HOST = 'mail.crvwwda.go.ke'
+EMAIL_FROM = 'recruitment@crvwwda.go.ke'
+EMAIL_HOST_USER = 'recruitment@crvwwda.go.ke'
+EMAIL_HOST_PASSWORD = 'Keza@2023**)'
+EMAIL_PORT = 25
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'Central Rift valley water works Development Agency career portal'
+DEFAULT_FROM_EMAIL = 'recruitment@crvwwda.go.ke'
 
 PASSWORD_RESET_TIMEOUT = 14400
 # Default primary key field type

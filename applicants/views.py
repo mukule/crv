@@ -408,46 +408,43 @@ def save_resume(request):
     employment_histories = EmploymentHistory.objects.filter(user=request.user)
     referees = Referee.objects.filter(user=request.user)
 
+    # Check if there are any academic details recorded
+    if not academic_details:
+        messages.error(request, 'Cannot submit resume without academic details.')
+        return redirect('index')
+
     # Check if a Resume instance already exists for the user
     resume, created = Resume.objects.get_or_create(user=request.user)
 
     # Populate the resume with data from other models
-    if academic_details:
-        for academic_detail in academic_details:
-            resume.academic_details.add(academic_detail)
+    for academic_detail in academic_details:
+        resume.academic_details.add(academic_detail)
     
-    if relevant_courses:
-        for relevant_course in relevant_courses:
-            resume.relevant_courses.add(relevant_course)
+    for relevant_course in relevant_courses:
+        resume.relevant_courses.add(relevant_course)
     
-    if employment_histories:
-        for employment_history in employment_histories:
-            resume.employment_histories.add(employment_history)
+    for employment_history in employment_histories:
+        resume.employment_histories.add(employment_history)
     
-    if referees:
-        for referee in referees:
-            resume.referees.add(referee)
+    for referee in referees:
+        resume.referees.add(referee)
 
     # Save the resume instance
     resume.save()
-    messages.success(request, 'Your Resume Submitted successfully.')
+    messages.success(request, 'Your Resume was submitted successfully.')
     return redirect('index')
+
 
 def upload_document(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            documents = []
-            for file in request.FILES.getlist('documents'):
-                document = Document(user=request.user, document=file)
-                document.save()
-                documents.append(document)
-            return redirect('vacancy')  # Redirect to the document list view after successful upload
+            form.save()
+            return redirect('vacancy')  # Redirect to a success page or another view
     else:
         form = DocumentForm()
-
+    
     return render(request, 'main/upload_document.html', {'form': form})
-
 
 from django.db import transaction
 from django.core.exceptions import ValidationError
