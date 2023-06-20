@@ -21,6 +21,7 @@ from django.contrib.auth import get_user_model
 from django.views import View
 import time
 User = get_user_model()
+from django.conf import settings
 
 
 
@@ -489,12 +490,17 @@ def apply_job(request, vacancy_id):
             application.is_qualified = is_qualified
             application.save()
 
-            # Send email on successful application
+            # Send email to user on successful application
             mail_subject = f"Application successful for {vacancy.job_name}"
-            message = f"Thank you for showing interest in joining our organization. We will review your application and notify you of the status."
-            to_email = user.email
-            email = EmailMessage(mail_subject, message, to=[to_email])
-            email.send()
+            user_message = f"Thank you for showing interest in joining our organization. We will review your application and notify you of the status"
+            user_email = EmailMessage(mail_subject, user_message, to=[user.email])
+            user_email.send()
+
+            # Send email to admin
+            admin_subject = f"New job application for {vacancy.job_name}"
+            admin_message = f"A new job application has been submitted for the vacancy: {vacancy.job_name}. Please review the application in the admin panel."
+            admin_email = EmailMessage(admin_subject, admin_message, to=[settings.ADMIN_EMAIL])  # Replace 'ADMIN_EMAIL' with the actual email address of the admin
+            admin_email.send()
 
             messages.success(request, "Job application submitted successfully.")
             return redirect('index')

@@ -182,20 +182,41 @@ class VacancyNameFilter(admin.SimpleListFilter):
 from import_export import fields
 
 class JobApplicationResource(resources.ModelResource):
-    user_full_name = fields.Field(attribute='user__get_full_name', column_name='User')
+    user_full_name = fields.Field(attribute='user__get_full_name', column_name='Applicant')
     vacancy_name = fields.Field(attribute='vacancy__job_name', column_name='Vacancy')
-    is_qualified = fields.Field(column_name='Is Qualified')
+    is_qualified = fields.Field(column_name='Qualifications')
+    requirements = fields.Field(column_name='Requirements')
+    unmet_requirements = fields.Field(column_name='Unmet Requirements')
 
     class Meta:
         model = JobApplication
-        fields = ('user_full_name', 'vacancy_name', 'application_date', 'is_qualified')
+        fields = ('user_full_name', 'vacancy_name', 'application_date', 'is_qualified', 'requirements', 'unmet_requirements')
 
     def dehydrate_is_qualified(self, obj):
-        return 'Yes' if obj.is_qualified else 'No'
+        return 'Qualified' if obj.is_qualified else 'Not qualified'
+
+    def dehydrate_requirements(self, obj):
+        return f"Academic Level: {obj.vacancy.academic_level}, Specialization: {obj.vacancy.specialization}, Area of Study: {obj.vacancy.area_of_study}"
+
+    def dehydrate_unmet_requirements(self, obj):
+        if not obj.is_qualified:
+            academic_details = AcademicDetails.objects.filter(user=obj.user).first()
+            unmet_requirements = []
+            if academic_details and obj.vacancy.academic_level != academic_details.academic_level:
+                unmet_requirements.append('Academic Level')
+            if obj.vacancy.specialization != academic_details.specialization:
+                unmet_requirements.append('Specialization')
+            if obj.vacancy.area_of_study != academic_details.area_of_study:
+                unmet_requirements.append('Area of Study')
+
+            if unmet_requirements:
+                return ', '.join(unmet_requirements)
+        return 'Meets all Requirements'
+
 
 class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = JobApplicationResource
-    list_display = ('get_user_full_name', 'get_vacancy_name', 'application_date', 'get_criteria', 'get_is_qualified', 'get_resume_details',)
+    list_display = ('get_user_full_name', 'get_vacancy_name', 'application_date', 'get_criteria', 'get_is_qualified', 'get_unmet_criteria', 'response', 'get_resume_details',)
     list_filter = ('application_date', 'vacancy__job_name', 'is_qualified')
     actions = ['send_email_to_applicants']
 
@@ -210,9 +231,9 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
     get_vacancy_name.short_description = 'Vacancy'
 
     def get_is_qualified(self, obj):
-        return 'Yes' if obj.is_qualified else 'No'
+        return 'Qualified' if obj.is_qualified else 'Not qualified'
 
-    get_is_qualified.short_description = 'Is Qualified'
+    get_is_qualified.short_description = 'Qualifications'
 
     def get_resume_details(self, obj):
         user_id = obj.user.id
@@ -222,27 +243,43 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
     get_resume_details.short_description = 'Resume Details'
 
     def get_criteria(self, obj):
-        criteria = f"Academic Level: {obj.vacancy.academic_level}, Specialization: {obj.vacancy.specialization}, Area of Study: {obj.vacancy.area_of_study}"
+        criteria = f"Academic Level: {obj.vacancy.academic_level}\nSpecialization: {obj.vacancy.specialization}\nArea of Study: {obj.vacancy.area_of_study}"
         return criteria
+
     
     get_criteria.short_description = 'Requirements'
-
     
-        
+    def get_unmet_criteria(self, obj):
+        if not obj.is_qualified:
+            academic_details = AcademicDetails.objects.filter(user=obj.user).first()
+            unmet_criteria = []
+            if academic_details and obj.vacancy.academic_level != academic_details.academic_level:
+                unmet_criteria.append('Academic Level')
+            if obj.vacancy.specialization != academic_details.specialization:
+                unmet_criteria.append('Specialization')
+            if obj.vacancy.area_of_study != academic_details.area_of_study:
+                unmet_criteria.append('Area of Study')
+            
+            if unmet_criteria:
+                return ', '.join(unmet_criteria)
+        return 'Meets all Requirements'
+    
+    get_unmet_criteria.short_description = 'Unmet Requirements'
 
-    class EmailForm(forms.Form):
-        template = forms.ModelChoiceField(queryset=EmailTemplate.objects.all())
+    def response(self, obj):
+        return obj.response
+
+    response.short_description = 'Feedback'
+
 
     def send_email_to_applicants(self, request, queryset):
         for application in queryset:
-            from_email = 'admin@example.com'
             to_email = [application.user.email]
 
             # Customize the email subject and message for each applicant
             subject = f'Regarding Your Job Application for {application.vacancy.job_name}'
-            message = f"Dear {application.user.get_full_name()}, we are happy to let you know that you qualified for the first phase of recruitment for the job you applied for: {application.vacancy.job_name}. Congratulations!!, We will let you know on the next process"
-
-            send_mail(subject, message, from_email, to_email)
+            message = application.response
+            send_mail(subject, message, from_email=None, recipient_list=to_email, fail_silently=False)
 
         self.message_user(request, 'Emails have been sent to selected applicants.')
 

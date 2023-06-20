@@ -142,6 +142,8 @@ EMAIL_PORT = 25
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'recruitment@crvwwda.go.ke'
 
+ADMIN_EMAIL = 'nelsonmasibo6@gmail.com'
+
 PASSWORD_RESET_TIMEOUT = 14400
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

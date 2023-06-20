@@ -255,6 +255,7 @@ class JobApplication(models.Model):
     application_date = models.DateTimeField(default=timezone.now)
     cover_letter = models.TextField()
     is_qualified = models.BooleanField(default=False)
+    response = models.TextField(blank=True)  # New field for admin's comment
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.vacancy.job_name} Application"
@@ -266,6 +267,7 @@ class JobApplication(models.Model):
 
     def is_vacancy_open(self):
         return self.vacancy.date_closed is None or self.vacancy.date_closed > timezone.now().date()
+
 
     
 class EmailTemplate(models.Model):
