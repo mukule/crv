@@ -268,11 +268,3 @@ class JobApplication(models.Model):
     def is_vacancy_open(self):
         return self.vacancy.date_closed is None or self.vacancy.date_closed > timezone.now().date()
 
-
-    
-class EmailTemplate(models.Model):
-    subject = models.CharField(max_length=255)
-    message = models.TextField()
-
-    def __str__(self):
-        return self.subject

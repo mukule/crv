@@ -114,6 +114,21 @@
         text-decoration: none;
         border-radius: 5px;
     }
+    .loader {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      text-align: center;
+      padding-top: 20%;
+    }
+    .loader img {
+      width: 100px;
+    }
     
     </style>
 </head>
@@ -152,9 +167,11 @@
             });
         });
       </script>
-      
-
-  
+      <script>
+        function showLoader() {
+          document.getElementById('loader').style.display = 'block';
+        }
+        </script>
   <script>
     document.getElementById("add-another").addEventListener("click", function() {
       var input = document.createElement("input");

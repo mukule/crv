@@ -137,12 +137,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.crvwwda.go.ke'
 EMAIL_FROM = 'recruitment@crvwwda.go.ke'
 EMAIL_HOST_USER = 'recruitment@crvwwda.go.ke'
-EMAIL_HOST_PASSWORD = 'Keza@2023**)'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 25
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'recruitment@crvwwda.go.ke'
 
-ADMIN_EMAIL = 'nelsonmasibo6@gmail.com'
+ADMIN_EMAIL = 'crvwdakenya@gmail.com'
 
 PASSWORD_RESET_TIMEOUT = 14400
 # Default primary key field type

@@ -322,5 +322,4 @@ admin.site.register(Vacancy)
 admin.site.register(AcademicDetails)
 admin.site.register(RelevantCourse)
 admin.site.register(JobApplication, JobApplicationAdmin)
-admin.site.register(EmailTemplate, EmailTemplateAdmin)
 
