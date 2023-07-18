@@ -47,10 +47,8 @@
                     <thead>
                         <tr>
                             <th data-label="Job Ref">Job Ref</th>
-                            <th data-label="Department">Department</th>
                             <th data-label="Position">Position</th>
                             <th data-label="Number of Vacancies">Number of Vacancies</th>
-                            <th data-label="Date Open">Date Open</th>
                             <th data-label="Close Date">Close Date</th>
                             <th data-label="Action">Action</th>
                         </tr>
@@ -59,10 +57,8 @@
                         {% for vacancy in vacancies %}
                             <tr>
                                 <td data-label="Job Ref">{{ vacancy.job_ref }}</td>
-                                <td data-label="Department">{{ vacancy.department }}</td>
                                 <td data-label="Position">{{ vacancy.job_name }}</td>
                                 <td data-label="Number of Vacancies">{{ vacancy.number_of_vacancies }}</td>
-                                <td data-label="Date Open">{{ vacancy.date_open }}</td>
                                 <td data-label="Close Date">{{ vacancy.date_closed }}</td>
                                 <td data-label="Action"><a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" href="{% url 'job_detail' vacancy.id %}">Job details</a></td>
                             </tr>

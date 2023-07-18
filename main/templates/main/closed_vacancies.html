@@ -29,7 +29,6 @@
                     <thead>
                         <tr>
                             <th data-label="Job Ref">Job Ref</th>
-                            <th data-label="Department">Department</th>
                             <th data-label="Position">Position</th>
                             <th data-label="Position">Vacancy type</th>
                             <th data-label="Number of Vacancies">Number of Vacancies</th>
@@ -41,11 +40,9 @@
                         {% for vacancy in page_obj %}
                             <tr>
                                 <td data-label="Job Ref">{{ vacancy.job_ref }}</td>
-                                <td data-label="Department">{{ vacancy.department }}</td>
                                 <td data-label="Position">{{ vacancy.job_name }}</td>
                                 <td data-label="Position">{{ vacancy.vacancy_type }}</td>
                                 <td data-label="Number of Vacancies">{{ vacancy.number_of_vacancies }}</td>
-                                <td data-label="Date Open">{{ vacancy.date_open }}</td>
                                 <td data-label="Close Date">{{ vacancy.date_closed }}</td>
                             </tr>
                         {% endfor %}

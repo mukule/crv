@@ -200,7 +200,7 @@ class VacancyType(models.Model):
 
 class Vacancy(models.Model):
     job_name = models.CharField(max_length=200)
-    job_ref = models.CharField(max_length=20)
+    job_ref = models.CharField(max_length=200)
     job_description = RichTextField(blank=True, null=True)
     reports_to = models.CharField(max_length=200, blank=True, null=True)
     academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
