@@ -192,17 +192,17 @@ class Resume(models.Model):
         return f"{self.user.first_name} {self.user.last_name} - Resume"
     
 class VacancyType(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
 
 
 class Vacancy(models.Model):
-    job_name = models.CharField(max_length=100)
+    job_name = models.CharField(max_length=200)
     job_ref = models.CharField(max_length=20)
     job_description = RichTextField(blank=True, null=True)
-    reports_to = models.CharField(max_length=100, blank=True, null=True)
+    reports_to = models.CharField(max_length=200, blank=True, null=True)
     academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
     area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
     specialization = models.ForeignKey(Specialization, on_delete=models.SET_NULL, null=True, blank=True)

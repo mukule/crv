@@ -133,13 +133,14 @@ MEDIA_URL = '/media/'
 
 
 # Emailing settings
+# EMAIL_HOST = 'mail.crvwwda.go.ke'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.crvwwda.go.ke'
+EMAIL_HOST = 'crvwwda.go.ke'
 EMAIL_FROM = 'recruitment@crvwwda.go.ke'
 EMAIL_HOST_USER = 'recruitment@crvwwda.go.ke'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT = 25
-EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = 'Keza@2023**)'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'recruitment@crvwwda.go.ke'
 
 ADMIN_EMAIL = 'crvwdakenya@gmail.com'
@@ -166,3 +167,4 @@ CKEDITOR_CONFIGS = {
 }
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
