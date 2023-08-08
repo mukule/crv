@@ -23,6 +23,17 @@
     <div class="content-section col-lg-12 col-md-12 col-sm-12 tutorial-style">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            <div class="form-errors">
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
                 <fieldset class="form-group">
                     <div class="form-row">
                         <div class="form-group col-md-4 mb-0">
@@ -41,6 +52,11 @@
                         </div>
                         <div class="form-group col-md-6 mb-0">
                             {{ form.completion_date|as_crispy_field }}
+                        </div>
+                    </div> 
+                    <div class="form-row">
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.is_studying|as_crispy_field }}
                         </div>
                     </div> 
                     
@@ -71,7 +87,13 @@
                             <td data-label="Course Name">{{ relevant_course.course_name }}</td>
                             <td data-label="Institution">{{ relevant_course.institution }}</td>
                             <td data-label="Start Date">{{ relevant_course.start_date }}</td>
-                            <td data-label="Completion Date">{{ relevant_course.completion_date }}</td>
+                            <td data-label="Completion Date">
+                                {% if relevant_course.is_studying %}
+                                    Ongoing
+                                {% else %}
+                                    {{ relevant_course.completion_date }}
+                                {% endif %}
+                            </td>
                             <td data-label="Action"><a style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" href="{% url 'update_relevant_course' relevant_course.id %}">Update</a></td>
                         </tr>
                     {% empty %}

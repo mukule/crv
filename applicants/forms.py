@@ -162,16 +162,17 @@ class AcademicDetailsForm(forms.ModelForm):
         
 class RelevantCourseForm(forms.ModelForm):
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    completion_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    completion_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
         model = RelevantCourse
-        fields = ['course_name', 'institution', 'certification', 'start_date', 'completion_date']
+        fields = ['course_name', 'institution', 'certification', 'start_date', 'completion_date', 'is_studying']
 
     def clean(self):
         cleaned_data = super().clean()
         start_date = cleaned_data.get('start_date')
         completion_date = cleaned_data.get('completion_date')
+        is_studying = cleaned_data.get('is_studying')
 
         if start_date and completion_date and start_date > completion_date:
             self.add_error('start_date', "Start date cannot be greater than completion date.")
@@ -179,10 +180,19 @@ class RelevantCourseForm(forms.ModelForm):
         present_date = timezone.now().date()
 
         if start_date and start_date > present_date:
-            self.add_error('start_date', "Start date cannot be greater than the present date.")
+            self.add_error('start_date', "Start date cannot be a future date.")
 
         if completion_date and completion_date > present_date:
             self.add_error('completion_date', "Completion date cannot be greater than the present date.")
+
+        if not completion_date and not is_studying:
+            self.add_error(None, "Provide a completion date or indicate if still studying.")
+
+        if completion_date and is_studying:
+            self.add_error(None, "Provide either a completion date or indicate if still studying, not both.")
+
+        return cleaned_data
+
 
 class EmploymentHistoryForm(forms.ModelForm):
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))

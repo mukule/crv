@@ -27,11 +27,15 @@
                             {{ form.completion_date|as_crispy_field }}
                         </div>
                     </div> 
-                    
+                    <div class="form-row">
+                        <div class="form-group col-md-4 mb-0">
+                            {{ form.is_studying|as_crispy_field }}
+                        </div>
+                    </div> 
                 </fieldset>
                 <div class="form-row text-center">
                     <div class="form-group col-md-12 mb-2">
-                        <button class="btn btn-success" type="submit">Update Relevant Course</button>
+                        <button style="background-color: #89c73e; border: #89c73e;" class="btn btn-success" type="submit">Update Relevant Course</button>
                     </div>
                 </div>
                 

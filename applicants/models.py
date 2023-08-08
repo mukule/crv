@@ -113,6 +113,7 @@ class RelevantCourse(models.Model):
     certification = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
     completion_date = models.DateField(blank=True, null=True)
+    is_studying = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
