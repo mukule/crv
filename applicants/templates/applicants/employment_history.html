@@ -35,16 +35,20 @@
                        
                     </div> 
                     <div class="form-row">
-                        <div class="form-group col-md-6 mb-0">
-                            {{ form.position_description|as_crispy_field }}
-                        </div>
                         <div class="form-group col-md-3 mb-0">
                             {{ form.start_date|as_crispy_field }}
                         </div>
                         <div class="form-group col-md-3 mb-0">
                             {{ form.end_date|as_crispy_field }}
                         </div>
-                       
+                        <div class="form-group col-md-6 mb-0">
+                            {{ form.currently_working_here|as_crispy_field }}
+                        </div>
+                    </div> 
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                            {{ form.position_description|as_crispy_field }}
+                        </div>
                     </div> 
                 </fieldset>
                 <div class="form-row text-center">
@@ -75,7 +79,14 @@
                             <td data-label="Position">{{ employment_history.position }}</td>
                             <td data-label="Position Description">{{ employment_history.position_description }}</td>
                             <td data-label="Start Date">{{ employment_history.start_date }}</td>
-                            <td data-label="End Date">{{ employment_history.end_date }}</td>
+                            <td data-label="End Date">
+                                {% if employment_history.currently_working_here %}
+                                    Currently Working Here
+                                {% else %}
+                                    {{ employment_history.end_date }}
+                                {% endif %}
+                            </td>
+                            
                             <td data-label="Action">
                                 <a style="background-color: #89c73e; border: #89c73e;" href="{% url 'update_employment_history' employment_history.id %}" class="btn btn-success">Update</a>
                                 <!-- Add other actions or buttons as needed -->

@@ -125,6 +125,8 @@ class EmploymentHistory(models.Model):
     position_description = models.TextField(blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
+    currently_working_here = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f"{self.company_name} - {self.position}"

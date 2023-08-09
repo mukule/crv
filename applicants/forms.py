@@ -192,20 +192,25 @@ class RelevantCourseForm(forms.ModelForm):
             self.add_error(None, "Provide either a completion date or indicate if still studying, not both.")
 
         return cleaned_data
-
-
 class EmploymentHistoryForm(forms.ModelForm):
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    end_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
         model = EmploymentHistory
-        fields = ['company_name', 'position', 'position_description', 'start_date', 'end_date']
+        fields = ['company_name', 'position', 'position_description', 'start_date', 'end_date', 'currently_working_here']
 
     def clean(self):
         cleaned_data = super().clean()
         start_date = cleaned_data.get('start_date')
         end_date = cleaned_data.get('end_date')
+        currently_working_here = cleaned_data.get('currently_working_here')
+
+        if not end_date and not currently_working_here:
+            self.add_error('end_date', "Either an end date or 'currently working here' must be provided.")
+
+        if end_date and currently_working_here:
+            self.add_error('currently_working_here', "You cannot be 'currently working here' and provide an end date.")
 
         if start_date and end_date and start_date > end_date:
             self.add_error('start_date', "Start date cannot be greater than end date.")
@@ -217,6 +222,7 @@ class EmploymentHistoryForm(forms.ModelForm):
 
         if end_date and end_date > present_date:
             self.add_error('end_date', "End date cannot be greater than the present date.")
+
 class RefereeForm(forms.ModelForm):
     class Meta:
         model = Referee
