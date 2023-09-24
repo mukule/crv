@@ -305,9 +305,13 @@ class DocumentAdmin(admin.ModelAdmin):
     list_display = ('get_user_full_name', 'document')
     list_filter = ('user__username',)
 
+    # Add search fields for username and full name
+    search_fields = ['user__username', 'user__first_name', 'user__last_name']
+
     def get_user_full_name(self, obj):
         return obj.user.get_full_name()
-    get_user_full_name.short_description = 'User Full Name'  
+
+    get_user_full_name.short_description = 'User Full Name'
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
