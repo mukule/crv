@@ -220,32 +220,35 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
     list_filter = ('application_date', 'vacancy__job_name', 'is_qualified')
     actions = ['send_email_to_applicants']
 
-    # Add search fields for username and full name
-    search_fields = ['user__username', 'user__first_name', 'user__last_name']
-
     def get_user_full_name(self, obj):
         return obj.user.get_full_name()
+
     get_user_full_name.short_description = 'User'
 
     def get_vacancy_name(self, obj):
         return obj.vacancy.job_name
+
     get_vacancy_name.short_description = 'Vacancy'
 
     def get_is_qualified(self, obj):
         return 'Qualified' if obj.is_qualified else 'Not qualified'
+
     get_is_qualified.short_description = 'Qualifications'
 
     def get_resume_details(self, obj):
         user_id = obj.user.id
         resume_link = reverse('admin:applicants_resume_changelist') + f"?user__id__exact={user_id}"
         return format_html('<a href="{}">{}</a>', resume_link, 'View Resume')
+
     get_resume_details.short_description = 'Resume Details'
 
     def get_criteria(self, obj):
-        criteria = f"Academic Level: {obj.vacancy.academic_level}\nSpecialization: {obj.vacancy.specialization}\nAreas of Study: {obj.vacancy.area_of_study}"
+        criteria = f"Academic Level: {obj.vacancy.academic_level}\nSpecialization: {obj.vacancy.specialization}\nArea of Study: {obj.vacancy.area_of_study}"
         return criteria
-    get_criteria.short_description = 'Requirements'
 
+    
+    get_criteria.short_description = 'Requirements'
+    
     def get_unmet_criteria(self, obj):
         if not obj.is_qualified:
             academic_details = AcademicDetails.objects.filter(user=obj.user).first()
@@ -260,11 +263,14 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
             if unmet_criteria:
                 return ', '.join(unmet_criteria)
         return 'Meets all Requirements'
+    
     get_unmet_criteria.short_description = 'Unmet Requirements'
 
     def response(self, obj):
         return obj.response
+
     response.short_description = 'Feedback'
+
 
     def send_email_to_applicants(self, request, queryset):
         for application in queryset:
@@ -279,6 +285,7 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
 
     send_email_to_applicants.short_description = 'Send email to selected applicants'
     actions = [send_email_to_applicants]
+
 
     
 class CustomUserAdmin(UserAdmin):
