@@ -242,7 +242,7 @@ class JobApplicationAdmin(ExportMixin, admin.ModelAdmin):
     get_resume_details.short_description = 'Resume Details'
 
     def get_criteria(self, obj):
-        criteria = f"Academic Level: {obj.vacancy.academic_level}\nSpecialization: {obj.vacancy.specialization}\nArea of Study: {obj.vacancy.area_of_study}"
+        criteria = f"Academic Level: {obj.vacancy.academic_level}\nSpecialization: {obj.vacancy.specialization}\nAreas of Study: {obj.vacancy.area_of_study}"
         return criteria
     get_criteria.short_description = 'Requirements'
 
