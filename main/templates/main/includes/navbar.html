@@ -79,7 +79,7 @@
                 </li>
                 {% if user.is_superuser %}
                 <li class="menu-item mb-4">
-                    <a href=""><i class="menu-icon fa fa-envelope"></i>HR Dashboard</a>
+                    <a href="{% url 'hr:index' %}"><i class="menu-icon fa fa-envelope"></i>HR Dashboard</a>
                 </li>
             {% endif %}
             

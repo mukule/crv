@@ -1,0 +1,98 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-12 col-md-8">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="position-relative">
+                        <img src="{% static 'main/images/banner.png' %}" alt="banner" class="img-fluid" style="border-radius: 10px; width: 100%">
+                        <div class="image-overlay d-flex justify-content-center align-items-center d-none d-md-flex">
+                            <div class="image-text">
+                                <h5>Create New Vacancy</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form for creating a new vacancy -->
+    <div class="row justify-content-center mt-3">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <div class="form-row">
+                                <div class="form-group col-md-4 mb-0">
+                                    {{ form.job_ref|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    {{ form.job_name|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    {{ form.vacancy_type|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ form.academic_level|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ form.area_of_study|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ form.specialization|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ form.reports_to|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ form.number_of_vacancies|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ form.department|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ form.date_open|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ form.date_closed|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                
+                                <div class="form-group col-md-4 mb-0">
+                                    {{ form.job_description|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    {{ form.responsibilities|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    {{ form.requirements|as_crispy_field }}
+                                </div> 
+                               
+                            </div>
+                        </fieldset>
+                        <div class="form-row text-center">
+                            <div class="form-group col-md-12 mb-0">
+                                <button class="btn btn-success" type="submit">Create Vacancy</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

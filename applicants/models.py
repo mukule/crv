@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 import time
 
 
-
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True)
@@ -27,27 +26,30 @@ class CustomUser(AbstractUser):
         ('W', 'Widowed'),
     )
     INTEREST_CHOICES = (
-    ('I', 'Internship'),
-    ('E', 'Employment'),
-)
-    interest = models.CharField(max_length=255, choices=INTEREST_CHOICES, blank=True)
+        ('I', 'Internship'),
+        ('E', 'Employment'),
+    )
+    interest = models.CharField(
+        max_length=255, choices=INTEREST_CHOICES, blank=True)
     is_organization_staff = models.BooleanField(default=False)
-    marital_status = models.CharField(max_length=1, choices=MARITAL_STATUS_CHOICES, blank=True)
+    marital_status = models.CharField(
+        max_length=1, choices=MARITAL_STATUS_CHOICES, blank=True)
     postal_address = models.CharField(max_length=255, blank=True)
     DISABILITY_CHOICES = (
         ('Y', 'Yes'),
         ('N', 'No'),
     )
-    is_person_with_disability = models.CharField(max_length=1, choices=DISABILITY_CHOICES, blank=True)
+    is_person_with_disability = models.CharField(
+        max_length=1, choices=DISABILITY_CHOICES, blank=True)
     pwd_no = models.CharField(max_length=255, blank=True)
-    
 
     def image_upload_to(self, instance=None):
         if instance:
             return os.path.join('Users', self.username, instance)
         return None
 
-    image = models.ImageField(default='default/user.jpg', upload_to=image_upload_to)
+    image = models.ImageField(
+        default='default/user.jpg', upload_to=image_upload_to)
 
     def age(self):
         if self.date_of_birth:
@@ -56,6 +58,10 @@ class CustomUser(AbstractUser):
             return today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
         return None
 
+    def get_full_name(self):
+        # You can customize this method to return the user's full name
+        return f"{self.first_name} {self.last_name}"
+
 
 class AcademicLevel(models.Model):
     level = models.CharField(max_length=100)
@@ -63,18 +69,22 @@ class AcademicLevel(models.Model):
     def __str__(self):
         return self.level
 
+
 class AreaOfStudy(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
+
 class Specialization(models.Model):
-    area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.CASCADE, related_name='specializations')
+    area_of_study = models.ForeignKey(
+        AreaOfStudy, on_delete=models.CASCADE, related_name='specializations')
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
 
 class ExaminingBody(models.Model):
     name = models.CharField(max_length=100)
@@ -82,22 +92,30 @@ class ExaminingBody(models.Model):
     def __str__(self):
         return self.name
 
+
 class Course(models.Model):
     name = models.CharField(max_length=100)
-    specialization = models.ForeignKey(Specialization, on_delete=models.CASCADE, null=True)
+    specialization = models.ForeignKey(
+        Specialization, on_delete=models.CASCADE, null=True)
     examining_body = models.ForeignKey(ExaminingBody, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
-    
+
+
 class AcademicDetails(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
-    area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
-    specialization = models.ForeignKey(Specialization, on_delete=models.SET_NULL, null=True, blank=True)
-    examining_body = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
+    academic_level = models.ForeignKey(
+        AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
+    area_of_study = models.ForeignKey(
+        AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
+    specialization = models.ForeignKey(
+        Specialization, on_delete=models.SET_NULL, null=True, blank=True)
+    examining_body = models.ForeignKey(
+        ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
     institution_name = models.CharField(max_length=100, null=True, blank=True)
-    admission_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    admission_number = models.CharField(
+        max_length=20, unique=True, null=True, blank=True)
     start_year = models.DateField(blank=True, null=True)
     end_year = models.DateField(blank=True, null=True)
     graduation_year = models.DateField(blank=True, null=True)
@@ -105,19 +123,22 @@ class AcademicDetails(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
-    
+
+
 class RelevantCourse(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     course_name = models.CharField(max_length=100)
     institution = models.CharField(max_length=100, null=True, blank=True)
-    certification = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
+    certification = models.ForeignKey(
+        ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
     completion_date = models.DateField(blank=True, null=True)
     is_studying = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
-    
+
+
 class EmploymentHistory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=100)
@@ -127,10 +148,10 @@ class EmploymentHistory(models.Model):
     end_date = models.DateField(blank=True, null=True)
     currently_working_here = models.BooleanField(default=False)
 
-
     def __str__(self):
         return f"{self.company_name} - {self.position}"
-    
+
+
 class Referee(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -142,24 +163,31 @@ class Referee(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
-    
+
+
 class Resume(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
-    area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
-    specialization = models.ForeignKey(Specialization, on_delete=models.SET_NULL, null=True, blank=True)
-    examining_body = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True, related_name='resume_examining_body')
+    academic_level = models.ForeignKey(
+        AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
+    area_of_study = models.ForeignKey(
+        AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
+    specialization = models.ForeignKey(
+        Specialization, on_delete=models.SET_NULL, null=True, blank=True)
+    examining_body = models.ForeignKey(
+        ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True, related_name='resume_examining_body')
     institution_name = models.CharField(max_length=100, null=True, blank=True)
-    admission_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    admission_number = models.CharField(
+        max_length=20, unique=True, null=True, blank=True)
     start_year = models.DateField(blank=True, null=True)
     end_year = models.DateField(blank=True, null=True)
     graduation_year = models.DateField(blank=True, null=True)
     academic_details = models.ManyToManyField(AcademicDetails, blank=True)
-    
+
     # Fields from RelevantCourse model
     course_name = models.CharField(max_length=100)
     institution = models.CharField(max_length=100, null=True, blank=True)
-    certification = models.ForeignKey(ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True, related_name='resume_certification')
+    certification = models.ForeignKey(
+        ExaminingBody, on_delete=models.SET_NULL, null=True, blank=True, related_name='resume_certification')
     start_date = models.DateField(null=True, blank=True)
     completion_date = models.DateField(blank=True, null=True)
     relevant_courses = models.ManyToManyField(RelevantCourse, blank=True)
@@ -169,8 +197,9 @@ class Resume(models.Model):
     position_description = models.TextField(blank=True, null=True)
     employment_start_date = models.DateField(blank=True, null=True)
     employment_end_date = models.DateField(blank=True, null=True)
-    employment_histories = models.ManyToManyField(EmploymentHistory, blank=True)
-    
+    employment_histories = models.ManyToManyField(
+        EmploymentHistory, blank=True)
+
     # Fields from Referee model
     referee_name = models.CharField(max_length=100)
     occupation = models.CharField(max_length=100)
@@ -193,7 +222,8 @@ class Resume(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - Resume"
-    
+
+
 class VacancyType(models.Model):
     name = models.CharField(max_length=200)
 
@@ -206,15 +236,20 @@ class Vacancy(models.Model):
     job_ref = models.CharField(max_length=200)
     job_description = RichTextField(blank=True, null=True)
     reports_to = models.CharField(max_length=200, blank=True, null=True)
-    academic_level = models.ForeignKey(AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
-    area_of_study = models.ForeignKey(AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
-    specialization = models.ForeignKey(Specialization, on_delete=models.SET_NULL, null=True, blank=True)
+    academic_level = models.ForeignKey(
+        AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
+    area_of_study = models.ForeignKey(
+        AreaOfStudy, on_delete=models.SET_NULL, null=True, blank=True)
+    specialization = models.ForeignKey(
+        Specialization, on_delete=models.SET_NULL, null=True, blank=True)
     requirements = RichTextField(blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
     number_of_vacancies = models.PositiveIntegerField(blank=True, null=True)
     responsibilities = RichTextField(blank=True, null=True)
-    vacancy_type = models.ForeignKey(VacancyType, on_delete=models.SET_NULL, null=True, blank=True)
-    document = models.FileField(upload_to='vacancy_documents/', blank=True, null=True)
+    vacancy_type = models.ForeignKey(
+        VacancyType, on_delete=models.SET_NULL, null=True, blank=True)
+    document = models.FileField(
+        upload_to='vacancy_documents/', blank=True, null=True)
     date_created = models.DateField(auto_now_add=True)
     date_open = models.DateField()
     date_closed = models.DateField(null=True, blank=True)
@@ -234,6 +269,7 @@ def certificate_upload_to(instance, filename):
     # Save the file with the user's full name
     full_name = f"{instance.user.first_name}_{instance.user.last_name}"
     return f"certificates/{full_name}/{filename}"
+
 
 class Document(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -270,4 +306,3 @@ class JobApplication(models.Model):
 
     def is_vacancy_open(self):
         return self.vacancy.date_closed is None or self.vacancy.date_closed > timezone.now().date()
-

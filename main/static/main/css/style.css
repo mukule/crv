@@ -31,7 +31,7 @@ Googel Fonts  */
   color: #fff; }
 
 .flat-color-1 {
-  color: #00c292; }
+  color: #000; }
 
 .flat-color-2 {
   color: #ab8ce4; }
@@ -152,7 +152,7 @@ Googel Fonts  */
   color: #fff; }
 
 .flat-color-1 {
-  color: #00c292; }
+  color: #243D8D; }
 
 .flat-color-2 {
   color: #ab8ce4; }
@@ -1379,12 +1379,12 @@ header.fixed-top {
     color: #868e96;
     font-size: 12px;
     font-weight: normal;
-    padding: .75em 1.25em;
+    padding: .70em 1.0em;
     text-transform: uppercase; }
     .table-stats table th img,
     .table-stats table td img {
-      margin-right: 10px;
-      max-width: 45px; }
+      margin-right: 6px;
+      max-width: 25px; }
     .table-stats table th .name,
     .table-stats table td .name {
       color: #343a40;

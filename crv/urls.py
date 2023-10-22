@@ -13,8 +13,10 @@ admin.site.index_title = 'CENTRAL RIFT VALLEY WATER WORKS DEVELOPMENT AGENCY'
 urlpatterns = [
     path("", include('main.urls')),
     path("", include('applicants.urls')),
+    path('hr/', include('hr.urls', namespace='hr')),
     path('tinymce/', include('tinymce.urls')),
     path('admin/', admin.site.urls),
+    
     
 ]
 if settings.DEBUG:

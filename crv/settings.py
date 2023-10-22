@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'import_export',
     'ckeditor',
     'multiupload',
+    'hr',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +90,7 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
-        
+
     }
 }
 
@@ -156,15 +157,19 @@ LOGIN_URL = 'login'
 AUTH_USER_MODEL = 'applicants.CustomUser'
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-CKEDITOR_UPLOAD_PATH = "ckeditor_uploads/"
-CKEDITOR_IMAGE_BACKEND = "pillow"
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'full',
+        'toolbar': 'Custom',
         'height': 300,
-        'width': 800,
+        'width': 300,
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList'],
+            ['Link', 'Unlink'],
+        ],
     },
 }
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
