@@ -14,7 +14,7 @@ from openpyxl.styles import Alignment
 import os
 from django.http import Http404
 import shutil
-
+from django.core.mail import send_mail
 # Create your views here.
 
 
@@ -415,6 +415,7 @@ def vac_ap_detail(request, vacancy_id):
     return render(request, 'hr/vac_ap_detail.html', context)
 
 
+@user_passes_test(is_superuser)
 def shortlist(request, application_id):
     job_application = get_object_or_404(JobApplication, pk=application_id)
 
@@ -426,6 +427,7 @@ def shortlist(request, application_id):
     return redirect('hr:vac_ap_detail', vacancy_id=job_application.vacancy.id)
 
 
+@user_passes_test(is_superuser)
 def zip_and_download_documents(user):
     # Create a temporary directory to store the documents
     temp_dir = 'temp_documents'
@@ -446,6 +448,7 @@ def zip_and_download_documents(user):
     return zip_file_path
 
 
+@user_passes_test(is_superuser)
 def resume(request, user_id):
     user = get_object_or_404(CustomUser, pk=user_id)
 
@@ -479,3 +482,42 @@ def resume(request, user_id):
     }
 
     return render(request, 'hr/resume.html', context)
+
+
+@user_passes_test(is_superuser)
+def update_response(request, application_id):
+    job_application = get_object_or_404(JobApplication, pk=application_id)
+
+    if request.method == 'POST':
+        form = JobApplicationResponseForm(
+            request.POST, instance=job_application)
+        if form.is_valid():
+            form.save()
+
+            # Check if the send_email checkbox is selected
+            if form.cleaned_data['send_email']:
+                # Customize the email subject and content as needed
+                vacancy_name = job_application.vacancy.job_name
+                vacancy_ref = job_application.vacancy.job_ref
+                email_subject = f'Application Feedback for {vacancy_name} (Ref: {vacancy_ref})'
+                email_message = f"Here is your update: {job_application.response}"
+
+                recipient_email = job_application.user.email
+
+                # Send the email
+                send_mail(email_subject, email_message,
+                          'recruitment@crvwwda.go.ke', [recipient_email])
+
+                # Add a success message for sending the email
+                messages.success(
+                    request, 'Email notification sent successfully.')
+
+            # Add a success message for updating the response
+            messages.success(request, 'Feedback added successfully.')
+
+            # Redirect to the vacancy application detail page
+            return redirect('hr:vac_ap_detail', job_application.vacancy.id)
+    else:
+        form = JobApplicationResponseForm(instance=job_application)
+
+    return render(request, 'hr/feedback.html', {'form': form, 'app': job_application})

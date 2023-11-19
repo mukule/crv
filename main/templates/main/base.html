@@ -201,6 +201,23 @@
     <script>
         CKEDITOR.replace('requirements');
     </script>
+
+    
+<script>
+    function confirmAndUpdate() {
+        var sendEmailCheckbox = document.getElementById('id_send_email');
+        var isSendEmailChecked = sendEmailCheckbox.checked;
+
+        if (isSendEmailChecked) {
+            var userConfirmed = confirm("Are you sure you want to send this feedback to the Applicant");
+            if (userConfirmed) {
+                document.getElementById('updateFeedbackForm').submit();
+            }
+        } else {
+            document.getElementById('updateFeedbackForm').submit();
+        }
+    }
+</script>
     
     
 </body>

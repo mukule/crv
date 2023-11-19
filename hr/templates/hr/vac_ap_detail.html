@@ -115,6 +115,7 @@
                             <th>Shortlisted</th>
                             <th>Resume</th>
                             <th>Documents</th>
+                            <th>Feedback</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,29 +129,40 @@
                                 <td>{{ app.user.get_full_name }}</td>
                                 <td>{{ app.vacancy.job_name }}</td>
                                 <td>{{ app.application_date }}</td>
-                                <td>{% if app.is_qualified %}Yes{% else %}No{% endif %}</td>
+                                <td>{% if app.is_qualified %}
+                                    <span class="badge badge-complete" title="Qualified">YES</span>
+                                    {% else %}
+                                    <span class="badge badge-pending" title="Not Qualified">NO</span>
+                                    {% endif %}</td>
                                 <td>
                                     {% if app.shortlisted %}
-                                        <a href="{% url 'hr:shortlist' app.id %}">
-                                            <span class="badge badge-complete" title="Shortlisted">Shortlist</span>
-                                        </a>
+                                    <a href="{% url 'hr:shortlist' app.id %}">
+                                        <span class="badge badge-complete" title="Unshortlist">Unshortlist</span>
+                                    </a>
                                     {% else %}
+                                       
                                         <a href="{% url 'hr:shortlist' app.id %}">
-                                            <span class="badge badge-pending" title="Unshortlist">Unshortlist</span>
+                                            <span class="badge badge-pending" title="Shortlisted">Shortlist</span>
                                         </a>
                                     {% endif %}
                                 </td>
                                 
                                 <td><a href="{% url 'hr:resume' user_id=app.user.id %}">
-                                    View Resume
+                                    <span class="badge badge-complete" title="View Resume">Resume</span>
                                 </a></td>
                                 <td>
                                     <form method="post" action="{% url 'hr:resume' user_id=app.user.id %}">
                                         {% csrf_token %}
-                                        <button type="submit" name="download_docs"><i class="fa fa-download"></i></button>
+                                        
+                                        <button type="submit" name="download_docs" class="border-0 transparent">
+                                            <span class="badge badge-complete" title="Download Zipped Documents"><i class="fa fa-download"></i></span>
+                                        </button>
                                     </form>
                                     
                                 </td>
+                                <td style="text-align: left;"> <span class="badge badge-complete" title="Update Response for the Applicant">
+                                   <a href="{% url 'hr:update_response' application_id=app.id %}" class="text-white"> <i class="fa fa-envelope"></i></a>
+                                </span></td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -159,7 +171,6 @@
                 </table>
             </div>
 
-            <!-- Pagination Links (Centered) -->
             <div class="d-flex justify-content-center">
                 <ul class="pagination">
                     {% if applications.has_previous %}

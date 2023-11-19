@@ -15,4 +15,6 @@ urlpatterns = [
     path('toggle_shortlisted/<int:application_id>/',
          views.shortlist, name='shortlist'),
     path('applicant/<int:user_id>/resume/', views.resume, name='resume'),
+    path('update_response/<int:application_id>/',
+         views.update_response, name='update_response'),
 ]

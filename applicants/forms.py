@@ -347,3 +347,20 @@ class VacancyForm(forms.ModelForm):
                 field.required = True
             else:
                 field.required = False
+
+
+class JobApplicationResponseForm(forms.ModelForm):
+    send_email = forms.BooleanField(
+        required=False,
+        initial=False,
+        label='Send Email feedback to the applicant (if you check this, the feedback will be emailed to the applicant)',
+        # Update the id attribute
+        widget=forms.CheckboxInput(attrs={'id': 'id_send_email'})
+    )
+
+    class Meta:
+        model = JobApplication
+        fields = ['response']
+        widgets = {
+            'response': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
+        }
