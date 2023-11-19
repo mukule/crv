@@ -12,4 +12,7 @@ urlpatterns = [
     path("vac_ap", views.vac_ap, name="vac_ap"),
     path('vac_ap_detail/<int:vacancy_id>/',
          views.vac_ap_detail, name='vac_ap_detail'),
+    path('toggle_shortlisted/<int:application_id>/',
+         views.shortlist, name='shortlist'),
+    path('applicant/<int:user_id>/resume/', views.resume, name='resume'),
 ]

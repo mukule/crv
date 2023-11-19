@@ -104,7 +104,8 @@ class Course(models.Model):
 
 
 class AcademicDetails(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='AcademicDetails')
     academic_level = models.ForeignKey(
         AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
     area_of_study = models.ForeignKey(
@@ -126,7 +127,8 @@ class AcademicDetails(models.Model):
 
 
 class RelevantCourse(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='Relevantcourse')
     course_name = models.CharField(max_length=100)
     institution = models.CharField(max_length=100, null=True, blank=True)
     certification = models.ForeignKey(
@@ -140,7 +142,8 @@ class RelevantCourse(models.Model):
 
 
 class EmploymentHistory(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='EmploymentHistory')
     company_name = models.CharField(max_length=100)
     position = models.CharField(max_length=100)
     position_description = models.TextField(blank=True, null=True)
@@ -153,7 +156,8 @@ class EmploymentHistory(models.Model):
 
 
 class Referee(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='Referee')
     name = models.CharField(max_length=100)
     occupation = models.CharField(max_length=100)
     organization = models.CharField(max_length=100)
@@ -166,7 +170,9 @@ class Referee(models.Model):
 
 
 class Resume(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='Resume')
+    # academic details
     academic_level = models.ForeignKey(
         AcademicLevel, on_delete=models.SET_NULL, null=True, blank=True)
     area_of_study = models.ForeignKey(
@@ -254,6 +260,8 @@ class Vacancy(models.Model):
     date_open = models.DateField()
     date_closed = models.DateField(null=True, blank=True)
     is_filled = models.BooleanField(default=False)  # New boolean field
+    min_experience_years = models.PositiveIntegerField(
+        blank=True, null=True, help_text="Minimum years of experience required")
 
     def __str__(self):
         return f"{self.job_name} (Vacancy: {self.job_ref})"
@@ -272,7 +280,8 @@ def certificate_upload_to(instance, filename):
 
 
 class Document(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='Document')
     document = models.FileField(upload_to=certificate_upload_to)
 
     def __str__(self):
@@ -294,7 +303,8 @@ class JobApplication(models.Model):
     application_date = models.DateTimeField(default=timezone.now)
     cover_letter = models.TextField()
     is_qualified = models.BooleanField(default=False)
-    response = models.TextField(blank=True)  # New field for admin's comment
+    response = models.TextField(blank=True)
+    shortlisted = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.vacancy.job_name} Application"

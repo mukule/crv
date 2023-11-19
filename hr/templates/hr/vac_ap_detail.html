@@ -21,89 +21,167 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="card text-center">
+            <div class="row justify-content-center px-3 mt-3 mb-3">
+                <div class="col-md-12">
+                    <h4>Applications for {{ vacancy.job_name }} - {{ vacancy.job_ref }} (Total applications {{ vac_count }})</h4>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <h4>Requirements: {{ vacancy.academic_level }} || {{ vacancy.area_of_study }} || {{ vacancy.specialization }} || Posts: {{ vacancy.number_of_vacancies }} </h4>
+                </div>
+            </div>
+
+            <div class="card text-center" style="justify-content: center;">
+                <div class="row justify-content-center px-3 text-center">
                     <div class="col-md-12">
-                        <form method="get" action="{% url 'hr:vac_ap_detail' vacancy_id=vacancy.id %}
-                        " class="mb-3">
-                            <div class="row mt-2">
+                        <form method="get" action="{% url 'hr:vac_ap_detail' vacancy_id=vacancy.id %}" class="mb-3">
+                            <div class="form-row mt-2 mx-auto">
                                 <div class="col-md-2">
-                                    Total Applications ({{ vac_count }})
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" name="search" class="form-control" placeholder="Search by username or full name" value="{{ search_query }}">
+                                    <input type="text" name="search" class="form-control" placeholder="Search by ID or full name" value="">
                                 </div>
                                 <div class="col-md-2">
+                                    <select name="gender" class="form-control">
+                                        <option value="" selected disabled>Select Gender</option>
+                                        {% for choice in gender_choices %}
+                                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="disability" class="form-control">
+                                        <option value="" selected disabled>Select Disability</option>
+                                        {% for choice in disability_choices %}
+                                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="qualified_status" class="form-control">
+                                        <option value="" selected disabled>Qualified Status</option>
+                                        <option value="1">Qualified</option>
+                                        <option value="0">Not Qualified</option>
+                                    </select>
+                                </div>                                
+                                <div class="col-md-2">
+                                    <select name="marital_status" class="form-control">
+                                        <option value="" selected disabled>Select Marital Status</option>
+                                        {% for choice in marital_status_choices %}
+                                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="shortlisted" class="form-control">
+                                        <option value="" selected disabled>Shortlisted status</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>       
+                            </div>
+                        
+                            <div class="form-row mt-2 col-md-8 mx-auto text-center" id="search-form">
+                                <div class="col-md-3">
                                     <button type="submit" class="btn btn-info btn-block">Search</button>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <button type="submit" name="show_all" class="btn btn-secondary btn-block">Show All</button>
                                 </div>
-                                <div class="col-md-2">
-                                    <a href="{% url 'hr:index' %}" class="btn btn-success">Back to HR Dashboard</a>
+                                <div class="col-md-3">
+                                    <a href="{% url 'hr:index' %}" class="btn btn-success btn-block">Back to HR Dashboard</a>
+                                </div>
+                                <div class="col-md-3">
+                                    <a href="?export_excel=true" class="btn btn-primary btn-block">Export to Excel</a>
                                 </div>
                             </div>
                         </form>
+                        
                     </div>
                 </div>
-                <div class="table-stats order-table ov-h">
-                    <table class="table" style="font-size: 12px;">
-                        <thead>
+            </div>
+            
+
+            <div class="table-stats order-table ov-h">
+                <table class="table" style="font-size: 12px;">
+                    <thead>
+                        <tr>
+                            <th class="serial">#</th>
+                            <th class="avatar">Profile</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Vacancy</th>
+                            <th>Date Applied</th>
+                            <th>Qualified</th>
+                            <th>Shortlisted</th>
+                            <th>Resume</th>
+                            <th>Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
                             <tr>
-                                <th class="serial">#</th>
-                                <th class="avatar">Profile</th>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Vacancy</th>
-                                <th>Date Applied</th>
-                                <th>Qualified</th>
-                                <th>Feedback</th>
+                                <td class="serial">{{ forloop.counter }}</td>
+                                <td class="avatar">
+                                    <img src="{{ app.user.image.url }}" alt="User Avatar">
+                                </td>
+                                <td>{{ app.user.username }}</td>
+                                <td>{{ app.user.get_full_name }}</td>
+                                <td>{{ app.vacancy.job_name }}</td>
+                                <td>{{ app.application_date }}</td>
+                                <td>{% if app.is_qualified %}Yes{% else %}No{% endif %}</td>
+                                <td>
+                                    {% if app.shortlisted %}
+                                        <a href="{% url 'hr:shortlist' app.id %}">
+                                            <span class="badge badge-complete" title="Shortlisted">Shortlist</span>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'hr:shortlist' app.id %}">
+                                            <span class="badge badge-pending" title="Unshortlist">Unshortlist</span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                
+                                <td><a href="{% url 'hr:resume' user_id=app.user.id %}">
+                                    View Resume
+                                </a></td>
+                                <td>
+                                    <form method="post" action="{% url 'hr:resume' user_id=app.user.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" name="download_docs"><i class="fa fa-download"></i></button>
+                                    </form>
+                                    
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for app in applications %}
-                                <tr>
-                                    <td class="serial">{{ forloop.counter }}</td>
-                                    <td class="avatar">
-                                        <img src="{{ app.user.image.url }}" alt="User Avatar">
-                                    </td>
-                                    <td>{{ app.user.username }}</td>
-                                    <td>{{ app.user.get_full_name }}</td>
-                                    <td>{{ app.vacancy.job_name }}</td>
-                                    <td>{{ app.application_date }}</td>
-                                    <td>{% if app.is_qualified %}Yes{% else %}No{% endif %}</td>
-                                    <td>{{ app.response }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Pagination Links (Centered) -->
-                <div class="d-flex justify-content-center">
-                    <ul class="pagination">
-                        {% if applications.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page=1">First</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ applications.previous_page_number }}">Previous</a>
-                            </li>
-                        {% endif %}
-                        <li class="page-item disabled">
-                            <span class="page-link">Page {{ applications.number }} of {{ applications.paginator.num_pages }}</span>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                </table>
+            </div>
+
+            <!-- Pagination Links (Centered) -->
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    {% if applications.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">First</a>
                         </li>
-                        {% if applications.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ applications.next_page_number }}">Next</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ applications.paginator.num_pages }}">Last</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ applications.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ applications.number }} of {{ applications.paginator.num_pages }}</span>
+                    </li>
+                    {% if applications.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ applications.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ applications.paginator.num_pages }}">Last</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
