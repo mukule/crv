@@ -77,12 +77,7 @@
                 <li class="menu-item">
                     <a href="{% url 'application_status' %}"><i class="menu-icon fa fa-envelope"></i>Application Status</a>
                 </li>
-                {% if user.is_superuser %}
-                <li class="menu-item mb-4">
-                    <a href="{% url 'hr:index' %}"><i class="menu-icon fa fa-envelope"></i>HR Dashboard</a>
-                </li>
-            {% endif %}
-            
+               
                 {% else %}
                 <li class="menu-item btn-success mt-2 mb-2" id="dashboard">
                     <a href="{% url 'index'%}" class="text-white d-flex align-items-center">
@@ -134,7 +129,15 @@
                     <div class="user-menu dropdown-menu">
                         <a class="nav-link" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i>My Profile</a>
                         <a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-power-off"></i>Logout</a>
+                        <hr>
+                        {% if user.is_superuser %}
+                       
+                            <a class="nav-link" href="{% url 'hr:index' %}"><i class="menu-icon fa fa-user"></i>HR Dashboard</a>
+                        
+                    {% endif %}
+                    
                     </div>
+
                 </div>
                 {% else %}
                 <div class="user-area float-right">

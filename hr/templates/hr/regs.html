@@ -3,23 +3,32 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="content">
-    <div class="row justify-content-center">
-        <div class="col-lg-12 col-md-8">
-            <div class="card">
-                <div class="card-body p-0">
-                    <div class="position-relative">
-                        <img src="{% static 'main/images/banner.png' %}" alt="banner" class="img-fluid" style="border-radius: 10px; width: 100%;">
-                        <div class="image-overlay d-flex justify-content-center align-items-center d-none d-md-flex">
-                            <div class="image-text">
-                                <h5>All users registered on Career Portal</h5>
-                            </div>
-                        </div>
+
+<div class="breadcrumbs">
+    <div class="breadcrumbs-inner">
+        <div class="row m-0">
+            <div class="col-sm-4">
+                <div class="page-header float-left">
+                    <div class="page-title">
+                        <h1>Dashboard</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="page-header float-right">
+                    <div class="page-title">
+                        <ol class="breadcrumb text-right">
+                            <li><a href="{% url 'hr:index' %}">Dashboard</a></li>
+                            <li><a href="#">Registrants</a></li>
+                        </ol>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="content" style="height: 100vh !important;">
 
     <div class="row">
         <div class="col-lg-12">
@@ -27,10 +36,8 @@
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <form method="get" action="{% url 'hr:regs' %}" class="mb-3">
-                            <div class="row mt-2">
-                                <div class="col-md-2">
-                                   Total Registrants ({{user_count}})
-                                </div>
+                            <div class="row mt-2 justify-content-center">
+                                
                                 <div class="col-md-4">
                                     <input type="text" name="search" class="form-control" placeholder="Search by username or full name" value="{{ search_query }}">
                                 </div>
@@ -38,7 +45,7 @@
                                     <button type="submit" class="btn btn-info btn-block">Search</button>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="submit" name="show_all" class="btn btn-secondary btn-block">Show All</button>
+                                    <a class="btn btn-secondary btn-block" href="{% url 'hr:regs' %}">Show All</a>
                                 </div>
                                 <div class="col-md-2">
                                     <a href="{% url 'hr:index' %}" class="btn btn-success">Back to HR Dashboard</a>
@@ -47,36 +54,29 @@
                         </form>
                     </div>
                 </div>
-                
-                </div>
-                
-                
-                <div class="table-stats order-table ov-h">
-                    <table class="table" style="font-size: 8px;"> <!-- Adjust the font size as needed -->
-                        <thead>
+    
+                <div class="table-responsive">
+                    <table class="table table-bordered table-responsive" style="font-size: 12px;">
+                        <thead class="thead-light">
                             <tr>
-                                <th class="serial">#</th>
-                                <th class="avatar">Profile</th>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Gender</th>
-                                <th>DOB</th>
-                                <th>Marital status</th>
-                                <th>Interest</th>
-                                <th>Address</th>
-                                <th>Disability</th>
-                                <th>Status</th> <!-- You might want to provide a more descriptive header -->
+                                <th scope="col">#</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">DOB</th>
+                                <th scope="col">Marital Status</th>
+                                <th scope="col">Interest</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Disability</th>
+                                <th scope="col">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for user in users %}
-                                <tr style="height: 20px;"> <!-- Adjust the cell height as needed -->
-                                    <td class="serial">{{ forloop.counter }}</td>
-                                    <td class="avatar">
-                                        <img src="{{ user.image.url }}" alt="User Avatar">
-                                    </td>
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
                                     <td>{{ user.username }}</td>
                                     <td>{{ user.get_full_name }}</td>
                                     <td>{{ user.email }}</td>
@@ -89,17 +89,17 @@
                                     <td>{{ user.get_is_person_with_disability_display }}</td>
                                     <td>
                                         {% if user.is_active %}
-                                            <span class="badge badge-complete">Active</span>
+                                            <span class="badge badge-success">Active</span>
                                         {% else %}
-                                            <span class="badge badge-pending">Inactive</span>
+                                            <span class="badge badge-secondary">Inactive</span>
                                         {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                </div> <!-- /.table-stats -->
-
+                </div>
+    
                 <!-- Pagination Links (Centered) -->
                 <div class="d-flex justify-content-center">
                     <ul class="pagination">
@@ -124,12 +124,10 @@
                         {% endif %}
                     </ul>
                 </div>
-                
-                
-
             </div>
         </div>
     </div>
+    
 </div>
 
 {% endblock content %}

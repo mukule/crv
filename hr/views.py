@@ -35,6 +35,8 @@ def regs(request):
 
     # Start with all users (non-superusers)
     users = CustomUser.objects.filter(is_superuser=False)
+    users = users.order_by('-date_joined')
+
 
     if search_query:
         # Filter by username, first name, and last name
@@ -55,7 +57,7 @@ def regs(request):
     page = request.GET.get('page')
     users = paginator.get_page(page)
 
-    return render(request, 'hr/regs.html', {'users': users, 'search_query': search_query, 'user_count': user_count})
+    return render(request, 'hr/regs.html', {'users': users, 'q': search_query, 'user_count': user_count})
 
 
 @user_passes_test(is_superuser)
